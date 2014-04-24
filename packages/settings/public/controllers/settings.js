@@ -5,8 +5,10 @@ angular.module('mean').controller('SettingsController', ['$scope', 'Global',
     $scope.global = Global;
     $scope.settings = {name:'zsettingss'};
 
-    $scope.liquors = [
-      {
+    $scope.drinks = [
+    {
+      title: "Liquor? I barely know her.",
+      bebidas: [{
         name: 'Whiskey',
         fullness: 50,
         carbonated: false
@@ -30,7 +32,37 @@ angular.module('mean').controller('SettingsController', ['$scope', 'Global',
         name: 'Gin',
         fullness: 23,
         carbonated: false
-      }
+      }]
+    },
+    {
+      title: "Mixer? I, uh, I got nothing.",
+      bebidas: [
+      {
+        name: 'Orange Juice',
+        fullness: 12,
+        carbonated: false
+      }, {
+        name: '7-Up',
+        fullness: 75,
+        carbonated: true
+      }, {
+        name: 'Cream',
+        fullness: 10,
+        carbonated: false
+      }, {
+        name: 'Lemonaid',
+        fullness: 28,
+        carbonated: false
+      }, {
+        name: 'Ice-T',
+        fullness: 69,
+        carbonated: false
+      }, {
+        name: 'Coke',
+        fullness: 23,
+        carbonated: true
+      }]
+    }
     ];
 
     $scope.suggestions = ["vodka","tequila","whiskey","kahlua","coke", "brandy", "wine"]

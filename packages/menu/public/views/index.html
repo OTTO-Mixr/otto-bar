@@ -1,0 +1,28 @@
+<div class="" data-ng-controller="MenuController">
+  <script type="text/ng-template" id="confirm.html">
+    <div class="modal-header">
+      <h3>Are you sure about that?</h3>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">Yeah</button>
+      <button class="btn btn-warning" ng-click="cancel()">No</button>
+    </div>
+  </script>
+  <h1>Welcome to OTTOs Menu</h1>
+  <div class="bar">
+    <input type="text" ng-model="searchString" placeholder="Enter a drink" />
+  </div>
+  <div id="search">
+  <ul>
+    <li ng-repeat="drink in drinks | searchFor:searchString | limitTo: 6">
+      <div id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
+      <h3>{{drink.name}}</h3>
+      <p>{{drink.ingredients}}</p>
+      </div>
+      <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="confirm(drink)">Make it</button>
+    </li>
+  </ul>
+  </div>
+</div>

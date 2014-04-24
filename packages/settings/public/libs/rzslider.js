@@ -829,7 +829,7 @@ function throttle(func, wait, options) {
         sliderLO = this.sliderElem.rzsl,
         newOffset = eventX - sliderLO - this.handleHalfWidth,
         newValue;
-
+        newOffset = eventX - this.sliderElem[0].getBoundingClientRect().top;
       if(newOffset <= 0)
       {
         if(pointer.rzsl !== 0)

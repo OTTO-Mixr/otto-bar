@@ -1,0 +1,43 @@
+.settings_example h1:{background-color:purple}
+
+#liquor,#mixer {
+  float: left;
+}
+
+.drinkBox {
+  display: inline-block;
+  margin: 0.5%;
+  width: 15.66%;
+  min-width: 150px;
+}
+
+/* Override default slider settings */
+#bottleContainer rzslider span.pointer {
+  background-color: transparent !important;
+  width: 100px !important;
+  z-index: 10 !important;
+}
+
+#bottleContainer {
+  position: relative;
+}
+
+#bottleContainer #full {
+  z-index: 1;
+  position: absolute;
+  left: 30px;
+}
+
+#bottleContainer #empty {
+  z-index: 2;
+  position: absolute;
+  left: 30px;
+  background: white;
+}
+
+#bottleContainer #bubbles {
+  z-index: 3;
+  position: absolute;
+  top: 75px;
+  left: 35px;
+}

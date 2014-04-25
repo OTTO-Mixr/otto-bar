@@ -5,8 +5,6 @@
 
 .drinkBox {
   display: inline-block;
-  margin: 0.5%;
-  width: 15.66%;
   min-width: 150px;
   height: 300px;
 }

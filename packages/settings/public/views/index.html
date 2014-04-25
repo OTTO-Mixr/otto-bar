@@ -3,7 +3,8 @@
 <!--  <h2>Liquor? I barely know her!</h2> -->
   <div ng-repeat="drink in drinks">
       <h2>{{drink.title}}</h2>
-      <div class="drinkBox" ng-repeat="liquor in drink.bebidas">
+      <div class="row">
+      <div class="drinkBox col-md-2" ng-repeat="liquor in drink.bebidas">
         <strong>#{{$index + 1}}</strong><br />
         <input type="text" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
       <div id="bottleContainer" ng-click="liquor.carbonated = !liquor.carbonated">
@@ -18,6 +19,7 @@
           <img src="/settings/assets/img/bubbles.png" draggable="false"/>
           </div>
         </div>
+      </div>
       </div>
   </div>
 <!--

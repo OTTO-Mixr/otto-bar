@@ -4,6 +4,7 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','Global'
   function($scope, $modal, Global, Menu) {
     $scope.global = Global;
     $scope.menu = {name:'menu'};
+    $scope.items = ['item1','item2','item3'];
 
     $scope.confirm = function(selectedDrink) {
       $scope.selectedDrink = selectedDrink;
@@ -11,18 +12,16 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','Global'
         templateUrl: 'confirm.html',
         controller: confirmControl,
         resolve: {
-          something: function() {
-            return "yo";
-          },
           selectedDrink: function() {
-            console.log($scope.selectedDrink);
             return $scope.selectedDrink;
           }
         }
       });
     };
 
-    var confirmControl = function($scope, $modalInstance) {
+    var confirmControl = function($scope, $modalInstance,selectedDrink) {
+      $scope.selectedDrink = selectedDrink;
+
       $scope.ok = function() {
         $modalInstance.close($scope.selectedDrink);
       };

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean').controller('MenuController', ['$scope', '$modal','Global',
-  function($scope, $modal, Global, Menu) {
+angular.module('mean').controller('MenuController', ['$scope', '$modal','$http','Global',
+  function($scope, $modal, $http, Global, Menu) {
     $scope.global = Global;
     $scope.menu = {name:'menu'};
     $scope.items = ['item1','item2','item3'];
@@ -16,6 +16,13 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','Global'
             return $scope.selectedDrink;
           }
         }
+      });
+
+      modalInstance.result.then(function (selectedDrink) {
+        angular.forEach(selectedDrink.recipe, function(ingredient,key) {
+          $http({method: 'UNLOCK', url: '/solenoid/' +
+            ingredient.solenoid + '/' + ingredient.ounces});
+        });
       });
     };
 
@@ -34,7 +41,14 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','Global'
     $scope.drinks = [
       {
         name: 'White Russian',
-        ingredients: 'Cream, Vodka, Kahlua'
+        ingredients: 'Cream, Vodka, Kahlua',
+        recipe: [{
+          solenoid: 0,
+          ounces: 1
+        }, {
+          solenoid: 1,
+          ounces: 2
+        }]
       },{
         name: 'Black Russian',
         ingredients: 'Vodka, Kahlua'

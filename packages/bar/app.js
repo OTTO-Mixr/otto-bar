@@ -9,7 +9,7 @@ var five = require("johnny-five");
 var util = require('util');
 
 var Bar = new Module("Bar");
-//var board = new five.Board();
+var board = new five.Board();
 /*
  * All MEAN packages require registration
  * Dependency injection is used to define required modules
@@ -28,7 +28,7 @@ Bar.register(function(app, auth, database) {
       menu: 'main'
     });
 
-/*
+
     board.on("ready", function() {
       var solenoid = new Array();
       var sol_ison = new Array();
@@ -81,6 +81,14 @@ Bar.register(function(app, auth, database) {
         res.send(true);
       });
 
+      app.unlock('/solenoid', function(req,res) {
+        for (i = 0; i < 6; i++) {
+          if (!solenoid_get_status(i))
+            solenoid_unlock(i);
+        }
+        res.send(true);
+      });
+
       app.get('/solenoid/:sol_num', function(req,res){
         res.type('text/plain');
 
@@ -114,7 +122,7 @@ Bar.register(function(app, auth, database) {
       });
 
     });
-*/
+
 
 
     /*

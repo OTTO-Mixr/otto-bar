@@ -65,6 +65,8 @@ angular.module('mean').controller('SettingsController', ['$scope', 'Global',
     }
     ];
 
+    $scope.drinkBackup = $scope.drinks;
+
     $scope.suggestions = ["vodka","tequila","whiskey","kahlua","coke", "brandy", "wine"]
 
     $scope.test = 0;

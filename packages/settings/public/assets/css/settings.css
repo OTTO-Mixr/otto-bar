@@ -6,6 +6,7 @@
 .drinkBox {
   display: inline-block;
   min-width: 150px;
+  margin-bottom: 15px;
 }
 
 /* Override default slider settings */
@@ -38,4 +39,10 @@
   position: absolute;
   top: 75px;
   left: 35px;
+}
+
+/* Override so that hidden stuff still takes up space */
+.ng-hide {
+  visibility: hidden;
+  display: block !important;
 }

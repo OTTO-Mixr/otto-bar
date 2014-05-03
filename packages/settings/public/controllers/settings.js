@@ -3,7 +3,7 @@
 angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Global',
   function($scope, $http, Global, Settings) {
     $scope.global = Global;
-    $scope.titles = ["Liquor","Mixers"];
+    $scope.titles = ["Warm","Cold"];
 
     // when landing on the page, get all drinks and show them
     $scope.installedDrinks = [];

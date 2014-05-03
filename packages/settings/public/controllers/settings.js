@@ -30,34 +30,18 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         console.log('Error: ' + data);
       });
 
-    $scope.updateDrink = function(solenoidIndex) {
-      if(solenoidIndex<=5){
-          $http.put('/api/installedDrinks/'+solenoidIndex, {
-          name:$scope.warmDrinks[solenoidIndex].name,
-          fullness: $scope.warmDrinks[solenoidIndex].fullness,
-          carbonated: $scope.warmDrinks[solenoidIndex].carbonated
-          })
-          .success(function(data) {
-            console.log('success!?');
-          })
-          .error(function(data) {
-            console.log('Error: ' + data);
-          });
-      }
-      else{
-          $http.put('/api/installedDrinks/'+solenoidIndex, {
-          name:$scope.coldDrinks[solenoidIndex%6].name,
-          fullness: $scope.coldDrinks[solenoidIndex%6].fullness,
-          carbonated: $scope.coldDrinks[solenoidIndex%6].carbonated
-          })
-          .success(function(data) {
-            console.log('success!?');
-          })
-          .error(function(data) {
-            console.log('Error: ' + data);
-          });
-      }
-      
+    $scope.updateDrink = function(parentIndex, solenoidIndex) {
+        $http.put('/api/installedDrinks/' + solenoidIndex, {
+        name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
+        fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
+        carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated
+        })
+        .success(function(data) {
+          console.log('success!?');
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
     };
 
     $scope.drinkBackup = $scope.installedDrinks;

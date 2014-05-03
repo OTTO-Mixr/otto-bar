@@ -5,11 +5,11 @@
 
 var Module = require("meanio").Module;
 
-var five = require("johnny-five");
+//var five = require("johnny-five");
 var util = require('util');
 
 var Bar = new Module("Bar");
-var board = new five.Board();
+//var board = new five.Board();
 /*
  * All MEAN packages require registration
  * Dependency injection is used to define required modules
@@ -28,7 +28,7 @@ Bar.register(function(app, auth, database) {
       menu: 'main'
     });
 
-
+/*
     board.on("ready", function() {
       var solenoid = new Array();
       var sol_ison = new Array();
@@ -122,7 +122,7 @@ Bar.register(function(app, auth, database) {
       });
 
     });
-
+*/
 
 
     /*

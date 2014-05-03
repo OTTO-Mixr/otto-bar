@@ -3,7 +3,7 @@
 angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Global',
   function($scope, $http, Global, Settings) {
     $scope.global = Global;
-    $scope.settings = {name:'zsettingss'};
+    $scope.titles = ["Liquor","Mixers"];
 
     // when landing on the page, get all drinks and show them
     $scope.installedDrinks = [];
@@ -64,8 +64,6 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
 
     $scope.suggestions = ["vodka","tequila","whiskey","kahlua","coke", "brandy", "wine"]
 
-    $scope.test = 0;
-    $scope.carbonated = false;
     $scope.sliderMultiplier = 1.78; //TODO change hardcode later
   }
 ]);

@@ -1,11 +1,11 @@
 <div class="" data-ng-controller="SettingsController">
   <h1>Configure OTTO</h1>
   <div ng-repeat="drink in drinks">
-      <h2>{{drink.title}}</h2>
+      <h2>{{titles[$index]}}</h2>
       <div class="row">
-      <div class="drinkBox col-md-2" ng-repeat="liquor in drink.bebidas">
+      <div class="drinkBox col-md-2" ng-repeat="liquor in drink">
         <strong>#{{$index + 1}}</strong><br />
-        <input type="text" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
+        <input type="text" typeahead-editable="false" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
       <div id="bottleContainer" >
         <rzslider rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.fullness"></rzslider>
         <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated">
@@ -22,7 +22,8 @@
         </div> <!--bottleContainer-->
         <div id="buttonRow" ng-show="changed">
           <button class="btn btn-success col-md-5">Save</button>
-          <button class="btn btn-warning col-md-5 col-md-offset-2" ng-onclick=>Clear</button>
+          <button class="btn btn-warning col-md-5 col-md-offset-2">Cancel</button>
+          <button class="btn btn-danger col-md-12">Remove</button>
         </div>
       </div> <!--drinkBox-->
       </div> <!--row-->

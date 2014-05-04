@@ -9,6 +9,10 @@
   margin-bottom: 15px;
 }
 
+.nopadding {
+  padding: 0 !important;
+}
+
 /* Override default slider settings */
 #bottleContainer rzslider span.pointer {
   background-color: transparent !important;

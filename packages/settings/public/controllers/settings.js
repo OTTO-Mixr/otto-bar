@@ -4,6 +4,8 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
   function($scope, $http, Global, Settings) {
     $scope.global = Global;
     $scope.titles = ["Warm","Cold"];
+    $scope.units = ["ml","oz","L","gal"];
+    $scope.unit= $scope.units[0];
 
     // when landing on the page, get all drinks and show them
     $scope.installedDrinks = [];

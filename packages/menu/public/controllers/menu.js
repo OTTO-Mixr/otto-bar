@@ -38,7 +38,7 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
             for(var j = 0; j < $scope.installedDrinks.length; j++){
                 if(selectedDrink.ingredients[i].type == $scope.installedDrinks[j].type){
-                  $scope.drinkIngredients.push([$scope.installedDrinks[j], selectedDrink.ingredients[i].amount]);
+                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], amount:selectedDrink.ingredients[i].amount});
                 }
             }
         }
@@ -49,12 +49,10 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
             ingredients : $scope.drinkIngredients
         }];
 
-        console.log('MenuItem:\n' + $scope.menuItem);
-
-        angular.forEach($scope.menuItem.ingredients, function(ingredient,key) {
-          urlBase = (ingredient.refrigerated) ? '/cold/' : '/warm/';
+        angular.forEach($scope.drinkIngredients, function(ingredient,key) {
+          var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
           $http({method: 'UNLOCK', url: urlBase +
-            ingredient.solenoid + '/' + ingredient.ounces});
+            ingredient.drink.solenoid + '/' + ingredient.amount});
         });
       });
     };

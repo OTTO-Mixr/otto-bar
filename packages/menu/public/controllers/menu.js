@@ -33,7 +33,25 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       });
 
       modalInstance.result.then(function (selectedDrink) {
-        angular.forEach(selectedDrink.recipe, function(ingredient,key) {
+        $scope.drinkIngredients = [];
+
+        for(var i = 0; i < selectedDrink.ingredients.length; i++){
+            for(var j = 0; j < $scope.installedDrinks.length; j++){
+                if(selectedDrink.ingredients[i].type == $scope.installedDrinks[j].type){
+                  $scope.drinkIngredients.push([$scope.installedDrinks[j], selectedDrink.ingredients[i].amount]);
+                }
+            }
+        }
+
+        $scope.menuItem = [{
+            name : selectedDrink.name,
+            description : selectedDrink.description,
+            ingredients : $scope.drinkIngredients
+        }];
+
+        console.log('MenuItem:\n' + $scope.menuItem);
+
+        angular.forEach($scope.menuItem.ingredients, function(ingredient,key) {
           $http({method: 'UNLOCK', url: '/solenoid/' +
             ingredient.solenoid + '/' + ingredient.ounces});
         });

@@ -7,7 +7,8 @@
         <strong>#{{$index + 1}}</strong><br />
         <input type="text" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
       <div id="bottleContainer" >
-        <rzslider rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.fullness"></rzslider>
+        <rzslider rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.fullness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
+        </rzslider>
         <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated">
           <div id="full">
           <img src="/settings/assets/img/bottlefull.png" draggable="false"/>
@@ -20,6 +21,11 @@
           </div>
           </div> <!--bottle-->
         </div> <!--bottleContainer-->
+    <strong>Size</strong><br/>
+    <div id="sizeContainer">
+      <div class="col-md-6 nopadding"><input min="0" max="9999" type="number" class="form-control"/></div>
+      <div class="col-md-6 nopadding"><select ng-model="unit" ng-options="unit for unit in units" class="form-control"></select></div>
+    </div>
         <div id="buttonRow" ng-show="changed">
           <button type="submit" class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index)">Save</button>
           <button class="btn btn-warning col-md-5 col-md-offset-2">Cancel</button>

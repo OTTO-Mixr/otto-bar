@@ -5,11 +5,14 @@
 
 var Module = require("meanio").Module;
 
+var BeagleBoneBlack = require('ioboard-beaglebone-black');
 var five = require("johnny-five");
+
 var util = require('util');
 
 var Bar = new Module("Bar");
-var board = new five.Board();
+//var board = new five.Board();
+var bone = new BeagleBoneBlack();
 /*
  * All MEAN packages require registration
  * Dependency injection is used to define required modules
@@ -29,15 +32,24 @@ Bar.register(function(app, auth, database) {
     });
 
 
-    board.on("ready", function() {
+    bone.on("ready", function() {
+
+      var board = five.Board({io: bone});
+
       var solenoid = new Array();
       var sol_ison = new Array();
+
       var i = 0;
 
-      for (i = 0; i < 6; i++) {
-        solenoid[i] = new five.Led(i+8);
+      var pump_index = 69;
+      var pump       = new five.Led(pump_index);
+
+      for (i = 0; i < 4; i++) {
+        solenoid[i] = new five.Led(i+66);
         sol_ison[i] = false;
-      } 
+      }
+
+//  #### HELPER_FUNCTIONS ####
 
       function solenoid_lock(sol_num) {
         sol_ison[sol_num] = false;
@@ -61,6 +73,54 @@ Bar.register(function(app, auth, database) {
       function solenoid_is_valid(sol_num) {
         return (sol_num>=0 && sol_num<=5);
       }
+
+      function pump_unlock() {
+        pump.on();
+
+        util.log('Pump '+pump_index+': Open\t- '+Date.now());
+      }
+
+      function pump_lock() {
+        pump.off();
+
+        util.log('Pump '+pump_index+': Closed\t- '+Date.now());
+      }
+
+// #### HELPER_FUNCTIONS END ####
+
+      app.unlock('/cold/:sol_num/:oz', function(req, res){
+
+
+         if (solenoid_is_valid(req.params.sol_num)) {
+          if (!sol_ison[req.params.sol_num]) {
+
+            var PUMP_OFFSET_TIME = 10;
+            var OZ_TIME = 1850; //MS
+            var oz_num  = req.params.oz;
+ 
+            solenoid_unlock(3);
+            solenoid_unlock(req.params.sol_num);
+
+            setTimeout(
+              solenoid_lock,
+              (OZ_TIME*oz_num) + PUMP_OFFSET_TIME,
+              3
+            );
+
+            setTimeout(solenoid_lock,OZ_TIME*oz_num,req.params.sol_num);
+            res.send('true');
+
+            } else {
+              util.log('Solenoid '+req.params.sol_num+': ERR\t- Already Open');
+              res.send('false');
+            //res.end();
+            }
+        } else {
+            util.log('Nope');
+            res.send('false');
+        }
+      
+      });
 
       app.lock('/solenoid/:sol_num', function(req,res){
         if (solenoid_is_valid(req.params.sol_num)) {
@@ -96,9 +156,8 @@ Bar.register(function(app, auth, database) {
           res.send(solenoid_get_status(req.params.sol_num));
       });
 
-      app.unlock('/solenoid/:sol_num/:oz', function(req,res){
+      app.unlock('/warm/:sol_num/:oz', function(req,res){
         res.type('text/plain');
-
 
         if (solenoid_is_valid(req.params.sol_num)) {
           if (!sol_ison[req.params.sol_num]) {
@@ -122,6 +181,9 @@ Bar.register(function(app, auth, database) {
       });
 
     });
+process.on('exit', function() {
+    bone.reset();
+});
 
     /*
     //Uncomment to use. Requires meanio@0.3.7 or above

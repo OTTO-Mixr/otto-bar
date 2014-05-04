@@ -12,6 +12,19 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.installedDrinks.push($scope.warmDrinks);
     $scope.installedDrinks.push($scope.coldDrinks);
 
+    //TODO PUT THIS IN A SEPARATE FILE AND INCLUDE IT
+    $scope.drinkMap = {};
+    $scope.drinkMap['grey goose'] = {
+        type : 'vodka',
+        abv : 40,
+        density : 1
+    }
+    $scope.drinkMap['pink lemonade'] = {
+        type : 'lemonade',
+        abv : 0,
+        density : 1
+    }
+
     //Get all the currently installed drinks from db
     console.log('Getting installedDrinks from db..');
     $http.get('/api/installedDrinks')
@@ -31,22 +44,33 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
       });
 
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
-        $http.put('/api/installedDrinks/' + solenoidIndex, {
-        name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
-        fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
-        carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated
-        })
-        .success(function(data) {
-          console.log('success!?');
-        })
-        .error(function(data) {
-          console.log('Error: ' + data);
-        });
+        if($scope.installedDrinks[parentIndex][solenoidIndex].name in $scope.drinkMap){
+            $http.put('/api/installedDrinks/' + solenoidIndex, {
+              type:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].type,
+              name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
+              abv:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].abv,
+              carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
+              density:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].density,
+              fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness
+            })
+            .success(function(data) {
+              console.log('success!?');
+            })
+            .error(function(data) {
+              console.log('Error: ' + data);
+            });
+        }
+        else{
+            alert('Fuck you, idk what the fuck you\'re talking about');
+        }
     };
 
     $scope.drinkBackup = $scope.installedDrinks;
 
-    $scope.suggestions = ["vodka","tequila","whiskey","kahlua","coke", "brandy", "wine"]
+    $scope.suggestions = [];
+    for(var key in $scope.drinkMap){
+      $scope.suggestions.push(key);
+    }
 
     $scope.sliderMultiplier = 1.78; //TODO change hardcode later
   }

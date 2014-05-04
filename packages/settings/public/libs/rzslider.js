@@ -168,6 +168,13 @@ function throttle(func, wait, options) {
     this.customTrFn = null;
 
     /**
+     * Custom translate function
+     *
+     * @type {function}
+     */
+    this.onChangeExpr = null;
+
+    /**
       * orientation
       * @type {boolean}
       *
@@ -218,6 +225,10 @@ function throttle(func, wait, options) {
       if(this.scope.rzSliderTranslate)
       {
         this.customTrFn = this.scope.rzSliderTranslate();
+      }
+
+      if (this.scope.onChange) {
+        this.onChangeExpr = this.scope.onChange;
       }
 
       if (typeof this.scope.rzSliderHorizontal !== "undefined") {
@@ -869,8 +880,9 @@ function throttle(func, wait, options) {
      */
     onMove: function (pointer, event)
     {
+      this.scope.$parent.$eval(this.attributes.change);
+
       if (this.horizontal) {
-        console.log("HERE!");
         var eventX = event.clientX || event.touches[0].clientX,
           sliderLO = this.sliderElem.rzsl,
           newOffset = eventX - sliderLO - this.handleHalfWidth,
@@ -964,7 +976,6 @@ function throttle(func, wait, options) {
 
   return Slider;
 }])
-
 .directive('rzslider', ['Slider', function(Slider)
 {
   return {
@@ -979,7 +990,7 @@ function throttle(func, wait, options) {
       rzSliderTranslate: '&',
       rzSliderHorizontal: '=?',
       rzSliderPointerOnly: '=?',
-      rzSliderHeight: '=?'
+      rzSliderHeight: '=?',
     },
     template:   '<span class="bar"></span>' + // 0 The slider bar
                 '<span class="bar selection"></span>' +  // 1 Highlight between two handles

@@ -172,8 +172,22 @@ function throttle(func, wait, options) {
       * @type {boolean}
       *
       */
-      // TODO: make an orientation option
-      this.horizontal = true;
+    this.horizontal = true;
+
+     /**
+      * pointerOnly
+      * @type {boolean}
+      *
+      */ 
+    this.pointerOnly = false;
+
+     /**
+      * height
+      * @type {integer}
+      *
+      */ 
+    this.height = 0;
+
     // Slider DOM elements wrapped in jqLite
     this.fullBar = null; // The whole slider bar
     this.selBar = null;  // Highlight between two handles
@@ -206,6 +220,19 @@ function throttle(func, wait, options) {
         this.customTrFn = this.scope.rzSliderTranslate();
       }
 
+      if (typeof this.scope.rzSliderHorizontal !== "undefined") {
+        this.horizontal = this.scope.rzSliderHorizontal;
+      }
+
+      if (typeof this.scope.rzSliderPointerOnly !== "undefined") {
+        this.pointerOnly = this.scope.rzSliderPointerOnly;
+      }
+
+      if (this.scope.rzSliderHeight) {
+        this.height = this.scope.rzSliderHeight;
+      }
+
+      this.horizontal = false;
       this.initElemHandles();
       this.calcViewDimensions();
 
@@ -432,12 +459,12 @@ function throttle(func, wait, options) {
         this.maxH.remove();
         this.selBar.remove();
       }
-      //TODO --> make removing all of this stuff an option
-      // e.g. simple display or pointer only mode
+      if (this.pointerOnly) {
         this.fullBar.remove();
         this.flrLab.remove();
         this.ceilLab.remove();
         this.minLab.remove();
+      }
     },
 
     /**
@@ -454,10 +481,11 @@ function throttle(func, wait, options) {
       this.handleHalfWidth = handleWidth / 2;
       this.barWidth = this.getWidth(this.fullBar);
 
-      //this.maxLeft = this.barWidth - handleWidth;
-      // TODO DONT LEAVE THIS HARDCODED VALUE
-      // FOR DEMONSTRATION PURPOSES ONLY
-      this.maxLeft = 178;
+      if (this.horizontal) {
+        this.maxLeft = this.barWidth - handleWidth;
+      } else {
+        this.maxLeft = this.height;
+      }
       this.getWidth(this.sliderElem);
       this.sliderElem.rzsl = this.sliderElem[0].getBoundingClientRect().left;
 
@@ -536,9 +564,16 @@ function throttle(func, wait, options) {
      */
     updateLowHandle: function(newOffset)
     {
-      this.setTop(this.minH, newOffset);
-      this.translateFn(this.scope.rzSliderModel, this.minLab);
-      this.setTop(this.minLab, newOffset - this.minLab.rzsw / 2 + this.handleHalfWidth);
+      if (this.horizontal) {
+        this.setLeft(this.minH, newOffset);
+        this.translateFn(this.scope.rzSliderModel, this.minLab);
+        this.setLeft(this.minLab, newOffset - this.minLab.rzsw / 2 + this.handleHalfWidth);
+      } else {
+        this.setTop(this.minH, newOffset);
+        this.translateFn(this.scope.rzSliderModel, this.minLab);
+        this.setTop(this.minLab, newOffset - this.minLab.rzsw / 2 + this.handleHalfWidth);
+      }
+
 
       this.shFloorCeil();
     },
@@ -727,7 +762,18 @@ function throttle(func, wait, options) {
       elem.rzsw = val.right - val.left;
       return elem.rzsw;
     },
-
+    /**
+     * Get element height
+     *
+     * @param {jqLite} elem The jqLite wrapped DOM element
+     * @returns {number}
+     */
+    getHeight: function(elem)
+    {
+      var val = elem[0].getBoundingClientRect();
+      elem.rzsw = val.bottom - val.top;
+      return elem.rzsw;
+    },
     /**
      * Set element width
      *
@@ -823,13 +869,18 @@ function throttle(func, wait, options) {
      */
     onMove: function (pointer, event)
     {
-    //TODO: use an if vertical or horizontal
-    //Don't hardcode Y here
-      var eventX = event.clientY || event.touches[0].clientY,
-        sliderLO = this.sliderElem.rzsl,
-        newOffset = eventX - sliderLO - this.handleHalfWidth,
+      if (this.horizontal) {
+        console.log("HERE!");
+        var eventX = event.clientX || event.touches[0].clientX,
+          sliderLO = this.sliderElem.rzsl,
+          newOffset = eventX - sliderLO - this.handleHalfWidth,
+          newValue;
+      } else {
+        var eventY = event.clientY || event.touches[0].clientY,
+        newOffset = eventY - this.sliderElem[0].getBoundingClientRect().top,
         newValue;
-        newOffset = eventX - this.sliderElem[0].getBoundingClientRect().top;
+      }
+
       if(newOffset <= 0)
       {
         if(pointer.rzsl !== 0)
@@ -925,7 +976,10 @@ function throttle(func, wait, options) {
       rzSliderPrecision: '@',
       rzSliderModel: '=?',
       rzSliderHigh: '=?',
-      rzSliderTranslate: '&'
+      rzSliderTranslate: '&',
+      rzSliderHorizontal: '=?',
+      rzSliderPointerOnly: '=?',
+      rzSliderHeight: '=?'
     },
     template:   '<span class="bar"></span>' + // 0 The slider bar
                 '<span class="bar selection"></span>' +  // 1 Highlight between two handles

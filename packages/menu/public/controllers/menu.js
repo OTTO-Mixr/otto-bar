@@ -34,7 +34,8 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
 
       modalInstance.result.then(function (selectedDrink) {
         angular.forEach(selectedDrink.recipe, function(ingredient,key) {
-          $http({method: 'UNLOCK', url: '/solenoid/' +
+          urlBase = (ingredient.refrigerated) ? '/cold/' : '/warm/';
+          $http({method: 'UNLOCK', url: urlBase +
             ingredient.solenoid + '/' + ingredient.ounces});
         });
       });

@@ -44,30 +44,8 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       $scope.selectedDrink = selectedDrink;
       $scope.installedDrinks = installedDrinks;
       
-      //The user wants to make drink. Let's make sure they have the correct ingredients first
+      //The user wants to make drink.
       $scope.ok = function() {
-          var canMakeDrink = true;
-          for(var i = 0; i < $scope.selectedDrink.ingredients.length; i++){
-            var ingredientFound = false;
-            for(var j = 0; j < $scope.installedDrinks.length; j++){
-                if($scope.selectedDrink.ingredients[i].type == $scope.installedDrinks[j].type){
-                  ingredientFound = true;
-                  break;
-                }
-            }
-            if(!ingredientFound){
-              canMakeDrink = false;
-              break;
-            }
-          }
-
-          if(canMakeDrink){
-            console.log('all good, create this drink bitches!');
-          }
-          else{
-            alert('You don\'t have the right ingredients dumbass.');
-          }
-
           $modalInstance.close($scope.selectedDrink);
       };
   

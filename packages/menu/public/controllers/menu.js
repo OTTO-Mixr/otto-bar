@@ -4,7 +4,18 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
   function($scope, $modal, $http, Global, Menu) {
     $scope.global = Global;
     $scope.menu = {name:'menu'};
-    $scope.items = ['item1','item2','item3'];
+
+    //Get the currently installed drinks to check that the user has the right drinks installed
+    $scope.installedDrinks = [];
+    $http.get('/api/installedDrinks')
+      .success(function(data) {
+        for(var i = 0; i < data.length; i++){
+          $scope.installedDrinks.push(data[i]);
+        }
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+      });
 
     $scope.confirm = function(selectedDrink) {
       $scope.selectedDrink = selectedDrink;
@@ -14,6 +25,9 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         resolve: {
           selectedDrink: function() {
             return $scope.selectedDrink;
+          },
+          installedDrinks: function() {
+            return $scope.installedDrinks;
           }
         }
       });
@@ -26,11 +40,35 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       });
     };
 
-    var confirmControl = function($scope, $modalInstance,selectedDrink) {
+    var confirmControl = function($scope, $modalInstance,selectedDrink,installedDrinks) {
       $scope.selectedDrink = selectedDrink;
-
+      $scope.installedDrinks = installedDrinks;
+      
+      //The user wants to make drink. Let's make sure they have the correct ingredients first
       $scope.ok = function() {
-        $modalInstance.close($scope.selectedDrink);
+          var canMakeDrink = true;
+          for(var i = 0; i < $scope.selectedDrink.ingredients.length; i++){
+            var ingredientFound = false;
+            for(var j = 0; j < $scope.installedDrinks.length; j++){
+                if($scope.selectedDrink.ingredients[i].type == $scope.installedDrinks[j].type){
+                  ingredientFound = true;
+                  break;
+                }
+            }
+            if(!ingredientFound){
+              canMakeDrink = false;
+              break;
+            }
+          }
+
+          if(canMakeDrink){
+            console.log('all good, create this drink bitches!');
+          }
+          else{
+            alert('You don\'t have the right ingredients dumbass.');
+          }
+
+          $modalInstance.close($scope.selectedDrink);
       };
   
       $scope.cancel = function() {
@@ -38,42 +76,18 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       };
     }
 
-    $scope.drinks = [
-      {
-        name: 'White Russian',
-        ingredients: 'Cream, Vodka, Kahlua',
-        recipe: [{
-          solenoid: 0,
-          ounces: 1
-        }, {
-          solenoid: 1,
-          ounces: 2
-        }]
-      },{
-        name: 'Black Russian',
-        ingredients: 'Vodka, Kahlua'
-      },{
-        name: 'Whiskey',
-        ingredients: 'Whiskey'
-      },{
-        name: 'AMF',
-        ingredients: 'a bunch of shit'
-      }, {
-        name: 'Rum & Coke',
-        ingredients: 'What do you fucking think?'
-      }, {
-        name: 'Old Fashioned',
-        ingredients: 'not sure actually'
-      }, {
-        name: 'Wine',
-        ingredients: 'wine'
-      }, {
-        name: 'Screwdriver',
-        ingredients: 'vodka. oj.'
-      }
-    ];
+    $scope.recipes = [];
+    $http.get('/api/recipes')
+      .success(function(data) {
+        for(var i = 0; i < data.length; i++){
+          $scope.recipes.push(data[i]);
+        }
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+      });
 
-    $scope.selectedDrink = $scope.drinks[0];
+    $scope.selectedDrink = $scope.recipes[0];
   }
 ]);
 

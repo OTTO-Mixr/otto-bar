@@ -21,8 +21,35 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         abv : 40,
         density : 1
     }
+    $scope.drinkMap['vodka'] = {
+        type : 'vodka',
+        abv : 40,
+        density : 1
+    }
+    $scope.drinkMap['tequila'] = {
+        type : 'tequila',
+        abv : 40,
+        density : 1
+    }
+    $scope.drinkMap['whiskey'] = {
+        type : 'whiskey',
+        abv : 40,
+        density : 1
+    }
+    $scope.drinkMap['lemonade'] = {
+        type : 'lemonade',
+        abv : 0,
+        density : 1
+    }
     $scope.drinkMap['pink lemonade'] = {
         type : 'lemonade',
+        abv : 0,
+        density : 1
+    }
+    $scope.drinkMap['empty'] = {
+        type : 'empty',
+        size : 100,
+        carbonated : false,
         abv : 0,
         density : 1
     }
@@ -31,6 +58,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     console.log('Getting installedDrinks from db..');
     $http.get('/api/installedDrinks')
       .success(function(data) {
+        data.sort(function(a,b) {return (a.solenoid > b.solenoid) ? 1 : ((b.solenoid > a.solenoid) ? -1 : 0);} );
         for(var i = 0; i < data.length; i++){
           console.log('Drink ' + i + ': ' + data[i]);
           if(i < 6){
@@ -47,7 +75,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
 
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
         if($scope.installedDrinks[parentIndex][solenoidIndex].name in $scope.drinkMap){
-            $http.put('/api/installedDrinks/' + solenoidIndex, {
+            $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
               type:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].type,
               name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
               abv:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].abv,

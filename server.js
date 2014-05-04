@@ -32,6 +32,12 @@ var Drink = mongoose.model('Drink', {
     fullness: Number
 });
 
+var Recipe = mongoose.model('Recipe', {
+	name : String,
+	description : String,
+	ingredients : []
+});
+
 // api ---------------------------------------------------------------------
 // get all drinks
 app.get('/api/installedDrinks', function(req, res) {
@@ -44,6 +50,20 @@ app.get('/api/installedDrinks', function(req, res) {
 			res.send(err);
 
 		res.json(installedDrinks); // return all drinks in JSON format
+	});
+});
+
+// get all recipes
+app.get('/api/recipes', function(req, res) {
+
+	// use mongoose to get all drinks in the database
+	Recipe.find(function(err, recipes) {
+
+		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		if (err)
+			res.send(err);
+
+		res.json(recipes); // return all drinks in JSON format
 	});
 });
 
@@ -75,11 +95,34 @@ app.post('/api/installedDrinks', function(req, res) {
 	});
 });
 
+// create recipe and send back all recipes after creation
+app.post('/api/recipes', function(req, res) {
+	// create a recipe, information comes from AJAX request from Angular
+	Recipe.create({
+		name : req.body.name,
+		description : req.body.description,
+		ingredients : req.body.ingredients
+	}, function(err, recipe) {
+		if (err)
+			res.send(err);
+
+		// get and return all the recipes after you create another
+		Recipe.find(function(err, recipes) {
+			if (err)
+				res.send(err);
+			res.json(recipes);
+		});
+	});
+});
+
 app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 	Drink.findOneAndUpdate({solenoid:req.params.solenoidIndex},
 		{
+			type : req.body.type,
 			name : req.body.name,
+			abv : req.body.abv,
 			carbonated : req.body.carbonated,
+			density : req.body.density,
 			fullness: req.body.fullness
 		}, function(err, drink) {
 		if (err)
@@ -107,6 +150,23 @@ app.delete('/api/installedDrinks/:drink_id', function(req, res) {
 			if (err)
 				res.send(err);
 			res.json(drinks);
+		});
+	});
+});
+
+// delete a recipe
+app.delete('/api/recipes/:recipe_id', function(req, res) {
+	Recipe.remove({
+		_id : req.params.recipe_id
+	}, function(err, recipe) {
+		if (err)
+			res.send(err);
+
+		// get and return all the recipes after you create another
+		Recipe.find(function(err, recipes) {
+			if (err)
+				res.send(err);
+			res.json(recipes);
 		});
 	});
 });

@@ -81,6 +81,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
               abv:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].abv,
               carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
               density:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].density,
+              refrigerated:(parentIndex==0?false:true),
               fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness
             })
             .success(function(data) {

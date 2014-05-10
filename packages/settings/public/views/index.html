@@ -26,10 +26,12 @@
       <div class="col-md-6 nopadding"><input ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
       <div class="col-md-6 nopadding"><select ng-model="unit" ng-options="unit for unit in units" class="form-control"></select></div>
     </div>
-        <div id="buttonRow" ng-show="changed">
-          <button type="submit" class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;">Save</button>
-          <button class="btn btn-warning col-md-5 col-md-offset-2">Cancel</button>
-          <button class="btn btn-danger col-md-12">Remove</button>
+        <div id="buttonRow">
+          <button type="submit" class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
+          <button class="btn btn-warning col-md-5 col-md-offset-2" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
+          Cancel</button>
+        </div>
+          <button class="btn btn-danger col-md-12" ng-click="removeDrink($parent.$index,$index)" ng-show="!changed">Remove</button>
         </div>
       </div> <!--drinkBox-->
       </div> <!--row-->

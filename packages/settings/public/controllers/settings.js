@@ -11,8 +11,13 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.installedDrinks = [];
     $scope.warmDrinks = [];
     $scope.coldDrinks = [];
+    $scope.backupDrinks = [];
+    $scope.backupWarm = [];
+    $scope.backupCold = [];
     $scope.installedDrinks.push($scope.warmDrinks);
     $scope.installedDrinks.push($scope.coldDrinks);
+    $scope.backupDrinks.push($scope.backupWarm);
+    $scope.backupDrinks.push($scope.backupCold);
 
     //TODO PUT THIS IN A SEPARATE FILE AND INCLUDE IT
     $scope.drinkMap = {};
@@ -63,9 +68,10 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
           console.log('Drink ' + i + ': ' + data[i]);
           if(i < 6){
               $scope.warmDrinks.push(data[i]);
-          }
-          else{
+              $scope.backupWarm.push(angular.copy(data[i]));
+          } else {
               $scope.coldDrinks.push(data[i]);
+              $scope.backupCold.push(JSON.parse(JSON.stringify(data[i])));
           }
         }
       })
@@ -96,7 +102,16 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         }
     };
 
-    $scope.drinkBackup = $scope.installedDrinks;
+    $scope.cancelDrink = function(parentIndex,index) {
+      angular.copy($scope.backupDrinks[parentIndex][index],$scope.installedDrinks[parentIndex][index]);
+    };
+// TODO important fullness should be 100 - emptiness
+    $scope.removeDrink = function(parentIndex,index) {
+      $scope.installedDrinks[parentIndex][index].fullness = 100;
+      $scope.installedDrinks[parentIndex][index].name = 'empty';
+      $scope.installedDrinks[parentIndex][index].carbonated = false;
+      $scope.updateDrink(parentIndex,index);
+    };
 
     $scope.suggestions = [];
     for(var key in $scope.drinkMap){

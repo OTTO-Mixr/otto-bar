@@ -1,0 +1,16 @@
+{
+  "name": "recipes",
+  "version": "0.0.0",
+  "description": "Some description of recipes",
+  "author": {
+    "name": "mean scaffold"
+  },
+  "mean" : true,
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.4.x"
+  },
+  "dependencies": {
+  },
+  "license": "MIT"
+}

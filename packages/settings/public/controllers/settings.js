@@ -91,7 +91,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
               fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness
             })
             .success(function(data) {
-              console.log('success!?');
+              angular.copy($scope.installedDrinks[parentIndex][solenoidIndex],$scope.backupDrinks[parentIndex][solenoidIndex]);
             })
             .error(function(data) {
               console.log('Error: ' + data);

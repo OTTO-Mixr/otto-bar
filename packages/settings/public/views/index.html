@@ -27,7 +27,7 @@
       <div class="col-md-6 nopadding"><select ng-model="unit" ng-options="unit for unit in units" class="form-control"></select></div>
     </div>
         <div id="buttonRow">
-          <button type="submit" class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
+          <button class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
           <button class="btn btn-warning col-md-5 col-md-offset-2" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
           Cancel</button>
         </div>

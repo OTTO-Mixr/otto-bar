@@ -115,6 +115,25 @@ app.post('/api/recipes', function(req, res) {
 	});
 });
 
+// update recipe
+app.put('/api/recipes/:recipe_id', function (req, res){
+	Recipe.findOneAndUpdate({_id:req.params.recipe_id},
+		{
+		  name : req.body.name,
+		  description : req.body.description,
+		  ingredients : req.body.ingredients
+		}, function(err, drink) {
+		if (err)
+			res.send(err);
+
+		// get and return all the drinks after you update one
+		Recipe.find(function(err, recipes) {
+			if (err)
+				res.send(err);
+			res.json(recipes);
+		});
+	});
+});
 app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 	Drink.findOneAndUpdate({solenoid:req.params.solenoidIndex},
 		{

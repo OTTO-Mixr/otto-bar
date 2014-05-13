@@ -14,7 +14,15 @@
         <input type="text" class="form-control" placeholder="Description" ng-model="description"/>
       </div>
       <div ng-repeat="ingredient in ingredients" class="form-group">
-        <input type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index)" ng-model="ingredient.name" />
+        <div class="col-md-3 nopadding">
+        <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
+        </div>
+        <div class="col-md-1 nopadding">
+        <strong>oz</strong>
+        </div>
+        <div class="col-md-8 nopadding">
+        <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
+        </div>
       </div>
     </div>
     <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()">Add it</button>
@@ -32,7 +40,17 @@
           <input type="text" class="form-control" placeholder="Description" ng-model="recipe.description"/>
         </div>
         <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
-          <input type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index)" ng-model="ingredient.name" />
+
+        <div class="col-md-3 nopadding">
+        <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
+        </div>
+        <div class="col-md-1 nopadding">
+        <strong>oz</strong>
+        </div>
+        <div class="col-md-8 nopadding">
+        <input focus-index="focusIndex" focus-index-change="recipe.ingredients" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,recipe.ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
+        </div>
+
         </div>
       </div>
       <button ng-show="!editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editing = true">Edit it</button>

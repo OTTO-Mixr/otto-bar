@@ -36,12 +36,10 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
         abv : 0,
         density : 1
     }
-    $scope.drinkMap['empty'] = {
-        type : 'empty',
-        size : 100,
-        carbonated : false,
-        abv : 0,
-        density : 1
+
+    $scope.suggestions = [];
+    for(var key in $scope.drinkMap){
+      $scope.suggestions.push(key);
     }
 
     $scope.recipes = [];
@@ -57,13 +55,14 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
       });
 
     $scope.ingredients=[{"name":''}];
+    $scope.focusIndex = -1;
 
-    $scope.addIngredient = function (index) {
-      if ($scope.ingredients.length == index+1)
-        $scope.ingredients.push({"name":''});
-      if ($scope.ingredients[index].name == '') {
-        $scope.ingredients.splice(index,1);
-        //TODO focus
+    $scope.addIngredient = function (index,ingredients) {
+      if (ingredients.length == index+1)
+        ingredients.push({"name":''});
+      if (ingredients[index].name == '') {
+        $scope.focusIndex=index;
+        ingredients.splice(index,1);
       }
     }
 
@@ -115,6 +114,27 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
     }
   }
 ]);
+
+angular.module('mean').directive('focusIndex',function($timeout,$rootScope) {
+  return {
+    restrict: 'A',
+    scope: {
+      indx: "=focusIndex",
+      changed: "=focusIndexChange"
+    },
+    link: function($scope,$element,attrs) {
+      $scope.$watchCollection("changed", function(curVal,prevVal) {
+        console.log("ingredients have been changed");
+        console.log($scope);
+        console.log($scope.$parent.$index);
+        console.log($scope.indx);
+        if (curVal < prevVal)
+        if ($scope.$parent.$index == $scope.indx)
+          $element[0].focus();
+      });
+    }
+  }
+});
 
 angular.module('mean').filter('searchFor',function() {
   return function(arr,searchString) {

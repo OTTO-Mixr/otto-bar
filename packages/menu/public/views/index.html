@@ -16,8 +16,8 @@
     <input type="text" ng-model="searchString" placeholder="Enter a drink" />
   </div>
   <div id="search">
-  <ul>
-    <li ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
+  <ul class="search-ul">
+    <li class="search-li" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
       <div id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
       <h3>{{recipe.name}}</h3>
       <p>{{recipe.description}}</p>

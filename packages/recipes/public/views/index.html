@@ -4,8 +4,8 @@
     <input type="text" ng-model="searchString" placeholder="Enter a drink" />
   </div>
   <div id="search">
-  <ul>
-    <li>
+  <ul class="search-ul">
+    <li class="search-li">
     <div id="addContainer" class="col-xs-6 col-sm-7 col-md-8">
       <div class="form-group">
         <input type="text" class="form-control" placeholder="Name" ng-model="name"/>
@@ -27,7 +27,7 @@
     </div>
     <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()">Add it</button>
     </li>
-    <li  ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
+    <li class="search-li" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
       <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
       <h3>{{recipe.name}}</h3>
       <p>{{recipe.description}}</p>

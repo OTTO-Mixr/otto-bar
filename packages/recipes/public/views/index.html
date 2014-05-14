@@ -17,14 +17,14 @@
       <div class="form-group" ng-class="{'has-error': add.description.$invalid && add.description.$dirty}">
         <input type="text" class="form-control" placeholder="Description" ng-model="description" name="description" required/>
       </div>
-      <div ng-repeat="ingredient in ingredients" class="form-group">
+      <div ng-repeat="ingredient in ingredients" class="form-group ingredient">
         <div class="col-md-3 nopadding">
         <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
         </div>
-        <div class="col-md-1 nopadding">
-        <strong>oz</strong>
+        <div class="col-md-3 nopadding">
+        <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
         </div>
-        <div class="col-md-8 nopadding">
+        <div class="col-md-6 nopadding">
         <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
         </div>
       </div>

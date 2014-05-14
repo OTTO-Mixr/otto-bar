@@ -4,6 +4,9 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
   function($scope, $modal, $http, Global, Menu) {
     $scope.global = Global;
     $scope.menu = {name:'menu'};
+
+    $scope.units=["oz","dash","ml"];
+
 // TODO get on this shit
     $scope.drinkMap = {};
     $scope.drinkMap['grey goose'] = {
@@ -53,12 +56,12 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
         console.log('Error: ' + data);
       });
 
-    $scope.ingredients=[{"name":''}];
+    $scope.ingredients=[{"name":'',"units":"oz"}];
     $scope.focusIndex = -1;
 
     $scope.addIngredient = function (index,ingredients) {
       if (ingredients.length == index+1)
-        ingredients.push({"name":''});
+        ingredients.push({"name":'',"units":"oz"});
       if (ingredients[index].name == '') {
         $scope.focusIndex=index;
         ingredients.splice(index,1);

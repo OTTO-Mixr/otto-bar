@@ -122,8 +122,10 @@ angular.module('mean').directive('unique',function() {
         scope.$apply(function() {
           var valid = true;
           for (var i = 0; i < scope.elementArr.length; i++) {
-            //TODO make sure that they're not at the same index
+            //make sure that they're not at the same index
             //otherwise name will never be valid when editing
+            if (scope.$parent.$index == i)
+              continue;
             if (scope.elementArr[i].name.toLowerCase() == elem.val().toLowerCase()) {
               valid = false;
               break;

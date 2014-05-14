@@ -123,19 +123,15 @@ angular.module('mean').directive('focusIndex',function($timeout,$rootScope) {
       changed: "=focusIndexChange"
     },
     link: function($scope,$element,attrs) {
-      $scope.$watchCollection("changed", function(curVal,prevVal) {
-        console.log("ingredients have been changed");
-        console.log($scope);
-        console.log($scope.$parent.$index);
-        console.log($scope.indx);
+      $scope.$watch("changed", function(curVal,prevVal) {
         if (curVal < prevVal)
-        if ($scope.$parent.$index == $scope.indx)
-          $element[0].focus();
+          if ($scope.$parent.$index == $scope.indx)
+            $element[0].focus();
       });
     }
   }
 });
-
+/*
 angular.module('mean').filter('searchFor',function() {
   return function(arr,searchString) {
     if(!searchString) return arr;
@@ -150,3 +146,4 @@ angular.module('mean').filter('searchFor',function() {
     return result;
   }
 });
+*/

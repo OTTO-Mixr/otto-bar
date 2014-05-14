@@ -48,7 +48,6 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
         for(var i = 0; i < data.length; i++){
           $scope.recipes.push(data[i]);
         }
-        console.log(data);
       })
       .error(function(data) {
         console.log('Error: ' + data);
@@ -87,14 +86,12 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
   }
 
     $scope.editIt = function(recipe) {
-      console.log(recipe);
       $http.put('/api/recipes/'+recipe._id, {
         name: recipe.name,
         description: recipe.description,
         ingredients: recipe.ingredients
       })
       .success(function(data) {
-        console.log(data);
         $scope.recipes = data;
       })
       .error(function(data) {
@@ -103,7 +100,6 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
   }
 
     $scope.deleteIt = function(recipe) {
-      console.log("trying to delete");
       $http.delete('/api/recipes/'+recipe._id)
       .success(function(data) {
         $scope.recipes = data;
@@ -115,7 +111,32 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
   }
 ]);
 
-angular.module('mean').directive('focusIndex',function($timeout,$rootScope) {
+angular.module('mean').directive('unique',function() {
+  return {
+    require: 'ngModel',
+    scope: {
+      elementArr: "=unique"
+    },
+    link: function(scope,elem,attrs,ctrl) {
+      elem.on('blur', function(evt) {
+        scope.$apply(function() {
+          var valid = true;
+          for (var i = 0; i < scope.elementArr.length; i++) {
+            //TODO make sure that they're not at the same index
+            //otherwise name will never be valid when editing
+            if (scope.elementArr[i].name.toLowerCase() == elem.val().toLowerCase()) {
+              valid = false;
+              break;
+            }
+          }
+          ctrl.$setValidity('unique',valid);
+        });
+      });
+    }
+  }
+});
+
+angular.module('mean').directive('focusIndex',function() {
   return {
     restrict: 'A',
     scope: {

@@ -7,11 +7,15 @@
   <ul class="search-ul">
     <li class="search-li border-fix">
     <div id="addContainer" class="col-xs-6 col-sm-7 col-md-8">
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Name" ng-model="name"/>
+    <form name="add" novalidate>
+      <div class="form-group" ng-class="{'has-error': add.name.$invalid && add.name.$dirty}">
+        <input type="text" class="form-control" placeholder="Name" ng-model="name" name="name" required unique="recipes"/>
+        <label class="control-label" ng-show="add.name.$error.unique">
+        Recipe name must be unique
+        </label>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Description" ng-model="description"/>
+      <div class="form-group" ng-class="{'has-error': add.description.$invalid && add.description.$dirty}">
+        <input type="text" class="form-control" placeholder="Description" ng-model="description" name="description" required/>
       </div>
       <div ng-repeat="ingredient in ingredients" class="form-group">
         <div class="col-md-3 nopadding">
@@ -24,8 +28,9 @@
         <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
         </div>
       </div>
+      </form>
     </div>
-    <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()">Add it</button>
+    <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
     </li>
     <li class="search-li border-fix" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6" >
       <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
@@ -33,14 +38,17 @@
       <p>{{recipe.description}}</p>
       </div>
       <div id="editContainer" ng-show="editing" class="col-xs-6 col-sm-7 col-md-8">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Name" ng-model="recipe.name"/>
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Description" ng-model="recipe.description"/>
-        </div>
-        <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
-
+    <form name="edit" novalidate>
+      <div class="form-group" ng-class="{'has-error': edit.name.$invalid && edit.name.$dirty}">
+        <input type="text" class="form-control" placeholder="Name" ng-model="recipe.name" name="name" required unique="recipes"/>
+        <label class="control-label" ng-show="edit.name.$error.unique">
+        Recipe name must be unique
+        </label>
+      </div>
+      <div class="form-group" ng-class="{'has-error': edit.description.$invalid && edit.description.$dirty}">
+        <input type="text" class="form-control" placeholder="Description" ng-model="recipe.description" name="description" required/>
+      </div>
+      <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
         <div class="col-md-3 nopadding">
         <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
         </div>
@@ -48,13 +56,13 @@
         <strong>oz</strong>
         </div>
         <div class="col-md-8 nopadding">
-        <input focus-index="focusIndex" focus-index-change="recipe.ingredients" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,recipe.ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
-        </div>
-
+        <input focus-index="focusIndex" focus-index-change="recipe.ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
         </div>
       </div>
+      </form>
+      </div>
       <button ng-show="!editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editing = true">Edit it</button>
-      <button ng-show="editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = false;">Save it</button>
+      <button ng-show="editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
       <button class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
     </li>
   </ul>

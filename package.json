@@ -35,6 +35,8 @@
     "express-validator": "^1.0.1",
     "forever": "^0.10.11",
     "grunt-cli": "^0.1.13",
+    "johnny-five": "latest",
+    "kue": "latest",
     "lodash": "^2.4.1",
     "mean-logger": "0.0.1",
     "meanio": "0.4.x",

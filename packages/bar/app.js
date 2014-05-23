@@ -2,14 +2,67 @@
 /*
  * Defining the Package
  */
+var Module  = require("meanio").Module;
+var voicejs = require('voice.js');
+var Queue   = require('bull');
+var util    = require('util');
+var http    = require('http')
+var fs      = require('fs');
 
-var Module = require("meanio").Module;
+var cocktailQ = Queue('cocktail pouring', 6379, 'localhost');
+var Bar       = new Module("Bar");
 
-//var five = require("johnny-five");
-var util = require('util');
+var client = new voicejs.Client({
+  email:'otto.mixr@gmail.com',
+  password:'PishPosh',
+  tokens: require('./tokens.json')
+});
 
-var Bar = new Module("Bar");
-//var board = new five.Board();
+cocktailQ
+  .on('completed', function(job){
+    var parsed = JSON.parse(JSON.stringify(job.data));
+      
+    client.altsms({
+      to: parsed.order.human.cell,
+      text: "Order up!  "+parsed.order.cocktail.name+
+            " for "+parsed.order.human.name+"!"
+    }, function(err, res, data){
+      if (err)  return console.log(err); 
+      console.log('SMS sent to ' + parsed.order.human.cell);
+    });
+
+    cocktailQ.pause();
+  })
+
+  .on('paused', function(){
+    console.log("Queue paused!");
+  })
+
+  .on('resumed', function(job){
+    console.log("Queue resumed");
+});
+
+
+cocktailQ.process(function(job, done){
+  console.log("Begin processing.");
+
+  var parsed = JSON.parse(JSON.stringify(job.data));
+  var routes = JSON.parse(JSON.stringify(parsed.order.cocktail.routes));
+
+  for (var route in routes){
+    var options = {
+      host: 'localhost',
+      port: 3000,
+      path: ''+routes[route], 
+      method: 'UNLOCK'
+    };
+
+    http.request(options, function(rem) {}).end();
+  }
+
+  done();
+});
+
 /*
  * All MEAN packages require registration
  * Dependency injection is used to define required modules
@@ -19,14 +72,6 @@ Bar.register(function(app, auth, database) {
 
     //We enable routing. By default the Package Object is passed to the routes
     Bar.routes(app, auth, database);
-
-    //We are adding a link to the main menu for all authenticated users
-    Bar.menus.add({
-      title: 'Activate Solenoid',
-      link: 'bar open solenoid',
-      //roles: ['authenticated'],
-      menu: 'main'
-    });
 
 /*
     board.on("ready", function() {
@@ -61,8 +106,24 @@ Bar.register(function(app, auth, database) {
       function solenoid_is_valid(sol_num) {
         return (sol_num>=0 && sol_num<=5);
       }
+*/
+
+// crypto.randomBytes(20).toString('hex');
+
+      app.post('/resume', function(req,res){
+        cocktailQ.resume();
+        res.send(true);
+      });
+
+      app.post('/queue', function(req,res){
+        cocktailQ.add(req.body);
+        res.send(true);
+        console.log("Added "+req.body.order.cocktail.name+
+                  " for "+req.body.order.human.name+"!");
+      });
 
       app.lock('/solenoid/:sol_num', function(req,res){
+         
         if (solenoid_is_valid(req.params.sol_num)) {
           if (solenoid_get_status(req.params.sol_num)){
             solenoid_lock(req.params.sol_num);
@@ -121,14 +182,13 @@ Bar.register(function(app, auth, database) {
         }
       });
 
-    });
-*/
+//    });
 
 
     /*
     //Uncomment to use. Requires meanio@0.3.7 or above
     // Save settings with callback
-    // Use this for saving data from administration pages
+      // Use this for saving data from administration pages
     Bar.settings({'someSetting':'some value'},function (err, settings) {
       //you now have the settings object
     });

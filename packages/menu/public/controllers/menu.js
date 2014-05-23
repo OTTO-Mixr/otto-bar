@@ -38,7 +38,7 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
             for(var j = 0; j < $scope.installedDrinks.length; j++){
                 if(selectedDrink.ingredients[i].name == $scope.installedDrinks[j].name){
-                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], oz:selectedDrink.ingredients[i].amount});
+                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], oz:selectedDrink.ingredients[i].oz});
                 }
             }
         }
@@ -46,7 +46,30 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         angular.forEach($scope.drinkIngredients, function(ingredient,key) {
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
           $http({method: 'UNLOCK', url: urlBase +
-            ingredient.drink.solenoid + '/' + ingredient.amount});
+            ingredient.drink.solenoid + '/' + ingredient.oz});
+        });
+        // queue post goes here
+        // on success:
+        angular.forEach($scope.drinkIngredients, function(ingredient,key) {
+          var pctEmpty = 100 * ingredient.oz/ingredient.drink.oz;
+          var newEmpty = pctEmpty + ingredient.drink.emptiness;
+          if (newEmpty > 100)
+            newEmpty = 100;
+          for (var i = 0; i < $scope.installedDrinks.length; i++) {
+            if ($scope.installedDrinks[i].solenoid == ingredient.drink.solenoid) {
+              $scope.installedDrinks[i].emptiness = newEmpty;
+              break;
+            }
+          }
+          $http.put('/api/installedDrinks/' + ingredient.drink.solenoid, {
+            emptiness: newEmpty
+          })
+          .success(function(data) {
+            //console.log(data);
+          })
+          .error(function(data) {
+            console.log(data); 
+          });
         });
       });
     };

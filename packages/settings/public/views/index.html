@@ -23,8 +23,8 @@
         </div> <!--bottleContainer-->
     <strong>Size</strong><br/>
     <div id="sizeContainer">
-      <div class="col-md-6 nopadding"><input ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
-      <div class="col-md-6 nopadding"><select ng-model="unit" ng-options="unit for unit in units" class="form-control"></select></div>
+      <div class="col-md-6 nopadding"><input ng-change="changed=true" ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
+      <div class="col-md-6 nopadding"><select ng-change="changed=true" ng-model="liquor.unit" ng-options="unit for unit in units" class="form-control"></select></div>
     </div>
         <div id="buttonRow">
           <button class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>

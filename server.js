@@ -25,6 +25,8 @@ var Drink = mongoose.model('Drink', {
 	name : String,
 	abv : Number,
 	size : Number,
+        unit: String,
+        oz: Number,
 	solenoid : Number,
     carbonated : Boolean,
     refrigerated : Boolean,
@@ -77,6 +79,8 @@ app.post('/api/installedDrinks', function(req, res) {
 		name : req.body.name,
 		//abv : req.body.abv,
 		size : req.body.size,
+                unit: req.body.unit,
+                oz: req.body.oz,
 		solenoid : req.body.solenoid,
 	    carbonated : req.body.carbonated,
 	    refrigerated : req.body.refrigerated,
@@ -137,14 +141,18 @@ app.put('/api/recipes/:recipe_id', function (req, res){
 //update drink
 app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 	Drink.findOneAndUpdate({solenoid:req.params.solenoidIndex},
-		{
+                req.body
+		/*{
 			//type : req.body.type,
 			name : req.body.name,
 			//abv : req.body.abv,
 			carbonated : req.body.carbonated,
+                        size : req.body.size,
+                        unit: req.body.unit,
+                        oz: req.body.oz,
 			//density : req.body.density,
-            emptiness: req.body.emptiness
-		}, function(err, drink) {
+                        emptiness: req.body.emptiness
+		}*/, function(err, drink) {
 		if (err)
 			res.send(err);
 

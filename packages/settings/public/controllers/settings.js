@@ -93,9 +93,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     }
 
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
-        if($scope.installedDrinks[parentIndex][solenoidIndex].name in $scope.drinkMap){
-
-            $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
+        $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
               type:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].type,
               name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
               abv:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].abv,
@@ -111,10 +109,6 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
             .error(function(data) {
               console.log('Error: ' + data);
             });
-        }
-        else{
-            alert('Fuck you, idk what the fuck you\'re talking about');
-        }
     };
 
     $scope.cancelDrink = function(parentIndex,index) {

@@ -7,6 +7,17 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
 
     $scope.units=["oz","dash","ml"];
 
+    $scope.convertToOz = function(amt,units) {
+      switch(units) {
+        case 'ml':
+          return amt * 0.033814;
+        case 'oz':
+          return amt;
+        case 'dash':
+          return amt * (1/32);
+      }
+    }
+
 // TODO get on this shit
     $scope.drinkMap = {};
     $scope.drinkMap['grey goose'] = {
@@ -69,8 +80,10 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
     }
 
     $scope.addIt = function() {
+      $scope.add.$setPristine(true);
+      $scope.ingredients.splice($scope.ingredients.length-1,1);
       $scope.ingredients.forEach(function(ingredient) {
-        ingredient.type = $scope.drinkMap[ingredient.name];
+        ingredient.oz = $scope.convertToOz(ingredient.amount,ingredient.units);
       });
       $http.post('/api/recipes',{
         name: $scope.name,
@@ -89,6 +102,9 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
   }
 
     $scope.editIt = function(recipe) {
+      recipe.ingredients.forEach(function(ingredient) {
+        ingredient.oz = $scope.convertToOz(ingredient.amount,ingredient.units);
+      });
       $http.put('/api/recipes/'+recipe._id, {
         name: recipe.name,
         description: recipe.description,

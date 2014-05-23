@@ -19,13 +19,13 @@
       </div>
       <div ng-repeat="ingredient in ingredients" class="form-group ingredient">
         <div class="col-md-3 nopadding">
-        <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
+        <input type="number" min="0.1" max="12" class="form-control" placeholder="" ng-model="ingredient.amount" ng-required="" />
         </div>
         <div class="col-md-3 nopadding">
         <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
         </div>
         <div class="col-md-6 nopadding">
-        <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
+        <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required=""/>
         </div>
       </div>
       </form>
@@ -50,7 +50,7 @@
       </div>
       <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
         <div class="col-md-3 nopadding">
-        <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.oz" />
+        <input type="number" min="0" max="12" class="form-control" placeholder="" ng-model="ingredient.amount" />
         </div>
         <div class="col-md-1 nopadding">
         <strong>oz</strong>

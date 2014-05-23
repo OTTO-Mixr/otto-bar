@@ -37,17 +37,11 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
 
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
             for(var j = 0; j < $scope.installedDrinks.length; j++){
-                if(selectedDrink.ingredients[i].type == $scope.installedDrinks[j].type){
-                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], amount:selectedDrink.ingredients[i].amount});
+                if(selectedDrink.ingredients[i].name == $scope.installedDrinks[j].name){
+                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], oz:selectedDrink.ingredients[i].amount});
                 }
             }
         }
-
-        $scope.menuItem = [{
-            name : selectedDrink.name,
-            description : selectedDrink.description,
-            ingredients : $scope.drinkIngredients
-        }];
 
         angular.forEach($scope.drinkIngredients, function(ingredient,key) {
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
@@ -73,9 +67,25 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
 
     $scope.recipes = [];
     $http.get('/api/recipes')
-      .success(function(data) {
-        for(var i = 0; i < data.length; i++){
-          $scope.recipes.push(data[i]);
+      .success(function(recipes) {
+        for(var i = 0; i < recipes.length; i++){
+          var recipeIsPossible = true;
+          for(var k = 0; k < recipes[i].ingredients.length; k++){
+            var ingredientFound = false;
+            for(var j = 0; j < $scope.installedDrinks.length; j++){
+                if(recipes[i].ingredients[k].name == $scope.installedDrinks[j].name){
+                  ingredientFound = true;
+                }
+            }
+            if(!ingredientFound){
+              recipeIsPossible = false;
+              break;
+            }
+          }
+
+          if(recipeIsPossible){
+            $scope.recipes.push(recipes[i]);  
+          }
         }
       })
       .error(function(data) {

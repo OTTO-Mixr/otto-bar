@@ -19,46 +19,6 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.backupDrinks.push($scope.backupWarm);
     $scope.backupDrinks.push($scope.backupCold);
 
-    //TODO PUT THIS IN A SEPARATE FILE AND INCLUDE IT
-    $scope.drinkMap = {};
-    $scope.drinkMap['grey goose'] = {
-        type : 'vodka',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['vodka'] = {
-        type : 'vodka',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['tequila'] = {
-        type : 'tequila',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['whiskey'] = {
-        type : 'whiskey',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['lemonade'] = {
-        type : 'lemonade',
-        abv : 0,
-        density : 1
-    }
-    $scope.drinkMap['pink lemonade'] = {
-        type : 'lemonade',
-        abv : 0,
-        density : 1
-    }
-    $scope.drinkMap['empty'] = {
-        type : 'empty',
-        size : 100,
-        carbonated : false,
-        abv : 0,
-        density : 1
-    }
-
     //Get all the currently installed drinks from db
     console.log('Getting installedDrinks from db..');
     $http.get('/api/installedDrinks')
@@ -93,28 +53,22 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     }
 
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
-        if($scope.installedDrinks[parentIndex][solenoidIndex].name in $scope.drinkMap){
-
-            $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
-              type:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].type,
-              name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
-              abv:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].abv,
-              carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
-              density:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].density,
-              refrigerated:(parentIndex==0?false:true),
-              fullness: 100 - $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
-              size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit)
-            })
-            .success(function(data) {
-              angular.copy($scope.installedDrinks[parentIndex][solenoidIndex],$scope.backupDrinks[parentIndex][solenoidIndex]);
-            })
-            .error(function(data) {
-              console.log('Error: ' + data);
-            });
-        }
-        else{
-            alert('Fuck you, idk what the fuck you\'re talking about');
-        }
+        $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
+          //type:,
+          name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
+          //abv:,
+          carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
+          //density:,
+          refrigerated:(parentIndex==0?false:true),
+          fullness: 100 - $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
+          size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit)
+        })
+        .success(function(data) {
+          angular.copy($scope.installedDrinks[parentIndex][solenoidIndex],$scope.backupDrinks[parentIndex][solenoidIndex]);
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
     };
 
     $scope.cancelDrink = function(parentIndex,index) {
@@ -129,9 +83,8 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     };
 
     $scope.suggestions = [];
-    for(var key in $scope.drinkMap){
-      $scope.suggestions.push(key);
-    }
+    //Add suggestions here
+    //Take from menu recipe ingredients!!!
 
     $scope.sliderMultiplier = 1.78; //TODO change hardcode later
   }

@@ -53,7 +53,9 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       };
     }
 
+    //Menu Filter
     $scope.recipes = [];
+    $scope.installedDrinks = [];
     $http.get('/api/recipes')
       .success(function(recipes) {
         $http.get('/api/installedDrinks')

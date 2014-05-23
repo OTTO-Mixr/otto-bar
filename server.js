@@ -73,16 +73,15 @@ app.get('/api/recipes', function(req, res) {
 app.post('/api/installedDrinks', function(req, res) {
 	// create a drink, information comes from AJAX request from Angular
 	Drink.create({
-		type : req.body.type,
+		//type : req.body.type,
 		name : req.body.name,
-		abv : req.body.abv,
+		//abv : req.body.abv,
 		size : req.body.size,
 		solenoid : req.body.solenoid,
 	    carbonated : req.body.carbonated,
 	    refrigerated : req.body.refrigerated,
-	    density : req.body.density,
-            emptiness: req.body.emptiness
-	    //fullness: req.body.fullness
+	    //density : req.body.density,
+        emptiness: req.body.emptiness
 	}, function(err, drink) {
 		if (err)
 			res.send(err);
@@ -135,16 +134,16 @@ app.put('/api/recipes/:recipe_id', function (req, res){
 		});
 	});
 });
+//update drink
 app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 	Drink.findOneAndUpdate({solenoid:req.params.solenoidIndex},
 		{
-			type : req.body.type,
+			//type : req.body.type,
 			name : req.body.name,
-			abv : req.body.abv,
+			//abv : req.body.abv,
 			carbonated : req.body.carbonated,
-			density : req.body.density,
-                        emptiness: req.body.emptiness
-			//fullness: req.body.fullness
+			//density : req.body.density,
+            emptiness: req.body.emptiness
 		}, function(err, drink) {
 		if (err)
 			res.send(err);

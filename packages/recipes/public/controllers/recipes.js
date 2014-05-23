@@ -39,7 +39,7 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
     $scope.addIngredient = function (index,ingredients) {
       if (ingredients.length == index+1)
         ingredients.push({"name":'',"units":"oz"});
-      if (ingredients[index].name == '') {
+      if (ingredients[index].name == '' || ingredients[index].name == undefined) {
         $scope.focusIndex=index;
         ingredients.splice(index,1);
       }

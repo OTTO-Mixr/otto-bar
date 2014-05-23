@@ -4,7 +4,13 @@
       <h3>Are you sure about that?</h3>
     </div>
     <div class="modal-body">
-      <p>You want a {{selectedDrink.name}} which has {{selectedDrink.description}} in it.</p>
+      <p>You want a {{selectedDrink.name}} which has</p>
+      <ul>
+        <li ng-repeat="ingredient in selectedDrink.ingredients">
+          {{ingredient.amount}} {{ingredient.units}} {{ingredient.name}}
+        </li>
+      </ul>
+      <p>in it.</p>
       <p ng-show="lowIngredients.length > 0">
         Hey buddy are you sure you want to make that? It looks like you're low on:
       </p>

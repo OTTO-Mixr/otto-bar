@@ -66,7 +66,21 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
     var confirmControl = function($scope, $modalInstance,selectedDrink,installedDrinks) {
       $scope.selectedDrink = selectedDrink;
       $scope.installedDrinks = installedDrinks;
-      
+      $scope.lowIngredients = [];
+
+      for(var i = 0; i < selectedDrink.ingredients.length; i++){
+          var recipeDrink = selectedDrink.ingredients[i];
+          for(var j = 0; j < $scope.installedDrinks.length; j++){
+              var installedDrink = installedDrinks[j];
+              var installedOzRemaining = installedDrink.oz * (100 - installedDrink.emptiness);
+              console.log(installedDrink);
+              console.log(installedOzRemaining);
+              if(recipeDrink.name == installedDrink.name && installedOzRemaining < recipeDrink.oz){
+                $scope.lowIngredients.push(installedDrink.name);
+              }
+          }
+      }
+
       //The user wants to make drink.
       $scope.ok = function() {
           $modalInstance.close($scope.selectedDrink);

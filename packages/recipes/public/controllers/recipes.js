@@ -18,43 +18,9 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
       }
     }
 
-// TODO get on this shit
-    $scope.drinkMap = {};
-    $scope.drinkMap['grey goose'] = {
-        type : 'vodka',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['vodka'] = {
-        type : 'vodka',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['tequila'] = {
-        type : 'tequila',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['whiskey'] = {
-        type : 'whiskey',
-        abv : 40,
-        density : 1
-    }
-    $scope.drinkMap['lemonade'] = {
-        type : 'lemonade',
-        abv : 0,
-        density : 1
-    }
-    $scope.drinkMap['pink lemonade'] = {
-        type : 'lemonade',
-        abv : 0,
-        density : 1
-    }
+
 
     $scope.suggestions = [];
-    for(var key in $scope.drinkMap){
-      $scope.suggestions.push(key);
-    }
 
     $scope.recipes = [];
     $http.get('/api/recipes')

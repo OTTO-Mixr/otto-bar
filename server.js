@@ -143,6 +143,7 @@ app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 			//abv : req.body.abv,
 			carbonated : req.body.carbonated,
 			//density : req.body.density,
+			refrigerated: req.body.refrigerated,
             emptiness: req.body.emptiness
 		}, function(err, drink) {
 		if (err)

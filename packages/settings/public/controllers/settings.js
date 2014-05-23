@@ -59,7 +59,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
           //abv:,
           carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
           //density:,
-          //refrigerated:(parentIndex==0?false:true),
+          refrigerated:(parentIndex==0?false:true),
           //size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit),
           emptiness: $scope.installedDrinks[parentIndex][solenoidIndex].emptiness
         })

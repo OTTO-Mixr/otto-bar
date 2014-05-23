@@ -26,15 +26,16 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
             for(var j = 0; j < $scope.installedDrinks.length; j++){
                 if(selectedDrink.ingredients[i].name == $scope.installedDrinks[j].name){
-                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], oz:selectedDrink.ingredients[i].amount});
+                  $scope.drinkIngredients.push({drink:$scope.installedDrinks[j], oz:selectedDrink.ingredients[i].oz});
                 }
             }
         }
-
+        //TODO: Solenoid might be incorrect
         angular.forEach($scope.drinkIngredients, function(ingredient,key) {
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
+          console.log(urlBase + ingredient.drink.solenoid + '/' + ingredient.oz);
           $http({method: 'UNLOCK', url: urlBase +
-            ingredient.drink.solenoid + '/' + ingredient.amount});
+            ingredient.drink.solenoid + '/' + ingredient.oz});
         });
       });
     };

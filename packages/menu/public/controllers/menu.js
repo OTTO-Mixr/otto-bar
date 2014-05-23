@@ -5,18 +5,6 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
     $scope.global = Global;
     $scope.menu = {name:'menu'};
 
-    //Get the currently installed drinks to check that the user has the right drinks installed
-    $scope.installedDrinks = [];
-    $http.get('/api/installedDrinks')
-      .success(function(data) {
-        for(var i = 0; i < data.length; i++){
-          $scope.installedDrinks.push(data[i]);
-        }
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
-
     $scope.confirm = function(selectedDrink) {
       $scope.selectedDrink = selectedDrink;
       var modalInstance = $modal.open({
@@ -42,9 +30,10 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
                 }
             }
         }
-
+        //TODO: Solenoid might be incorrect
         angular.forEach($scope.drinkIngredients, function(ingredient,key) {
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
+          console.log(urlBase + ingredient.drink.solenoid + '/' + ingredient.oz);
           $http({method: 'UNLOCK', url: urlBase +
             ingredient.drink.solenoid + '/' + ingredient.oz});
         });
@@ -88,28 +77,40 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
       };
     }
 
+    //Menu Filter
     $scope.recipes = [];
+    $scope.installedDrinks = [];
     $http.get('/api/recipes')
       .success(function(recipes) {
-        for(var i = 0; i < recipes.length; i++){
-          var recipeIsPossible = true;
-          for(var k = 0; k < recipes[i].ingredients.length; k++){
-            var ingredientFound = false;
-            for(var j = 0; j < $scope.installedDrinks.length; j++){
-                if(recipes[i].ingredients[k].name == $scope.installedDrinks[j].name){
-                  ingredientFound = true;
+        $http.get('/api/installedDrinks')
+          .success(function(data) {
+            for(var i = 0; i < data.length; i++){
+              $scope.installedDrinks.push(data[i]);
+            }
+            for(var i = 0; i < recipes.length; i++){
+              var recipeIsPossible = true;
+              for(var k = 0; k < recipes[i].ingredients.length; k++){
+                var ingredientFound = false;
+                for(var j = 0; j < $scope.installedDrinks.length; j++){
+                    if(recipes[i].ingredients[k].name == $scope.installedDrinks[j].name){
+                      ingredientFound = true;
+                    }
                 }
-            }
-            if(!ingredientFound){
-              recipeIsPossible = false;
-              break;
-            }
-          }
+                if(!ingredientFound){
+                  recipeIsPossible = false;
+                  break;
+                }
+              }
 
-          if(recipeIsPossible){
-            $scope.recipes.push(recipes[i]);  
-          }
-        }
+              if(recipeIsPossible){
+                $scope.recipes.push(recipes[i]);  
+              }
+            }
+          })
+          .error(function(data) {
+            console.log('Error: ' + data);
+        });
+        
       })
       .error(function(data) {
         console.log('Error: ' + data);

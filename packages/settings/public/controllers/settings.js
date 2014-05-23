@@ -63,6 +63,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
           size: $scope.installedDrinks[parentIndex][solenoidIndex].size,
           unit: $scope.installedDrinks[parentIndex][solenoidIndex].unit,
           oz: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit),
+          refrigerated:(parentIndex==0?false:true),
           emptiness: $scope.installedDrinks[parentIndex][solenoidIndex].emptiness
         })
         .success(function(data) {

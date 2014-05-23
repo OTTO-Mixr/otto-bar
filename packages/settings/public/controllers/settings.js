@@ -79,8 +79,22 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         console.log('Error: ' + data);
       });
 
+    $scope.convertToOz = function(amt,units) {
+      switch(units) {
+        case 'ml':
+          return amt * 0.033814;
+        case 'oz':
+          return amt;
+        case 'L':
+          return amt * 33.814;
+        case 'gal':
+          return amt * 128;
+      }
+    }
+
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
         if($scope.installedDrinks[parentIndex][solenoidIndex].name in $scope.drinkMap){
+
             $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
               type:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].type,
               name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
@@ -88,7 +102,8 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
               carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
               density:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].density,
               refrigerated:(parentIndex==0?false:true),
-              fullness: $scope.installedDrinks[parentIndex][solenoidIndex].fullness
+              fullness: 100 - $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
+              size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit)
             })
             .success(function(data) {
               angular.copy($scope.installedDrinks[parentIndex][solenoidIndex],$scope.backupDrinks[parentIndex][solenoidIndex]);
@@ -105,7 +120,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.cancelDrink = function(parentIndex,index) {
       angular.copy($scope.backupDrinks[parentIndex][index],$scope.installedDrinks[parentIndex][index]);
     };
-// TODO important fullness should be 100 - emptiness
+
     $scope.removeDrink = function(parentIndex,index) {
       $scope.installedDrinks[parentIndex][index].fullness = 100;
       $scope.installedDrinks[parentIndex][index].name = 'empty';

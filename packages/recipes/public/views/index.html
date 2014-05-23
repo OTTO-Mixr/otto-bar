@@ -56,7 +56,7 @@
         <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
         </div>
         <div class="col-md-6 nopadding">
-        <input focus-index="focusIndex" focus-index-change="recipe.ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
+        <input focus-index="focusIndex" focus-index-change="recipe.ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,recipe.ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" />
         </div>
       </div>
       </form>

@@ -67,7 +67,13 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
       });
   }
 
+
     $scope.editIt = function(recipe) {
+      recipe.ingredients.push({"name":'',"units":"oz"});
+    };
+
+    $scope.saveIt = function(recipe) {
+      recipe.ingredients.splice(recipe.ingredients.length-1,1);
       recipe.ingredients.forEach(function(ingredient) {
         ingredient.oz = $scope.convertToOz(ingredient.amount,ingredient.units);
       });

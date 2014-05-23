@@ -61,8 +61,8 @@
       </div>
       </form>
       </div>
-      <button ng-show="!editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editing = true">Edit it</button>
-      <button ng-show="editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
+      <button ng-show="!editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = true">Edit it</button>
+      <button ng-show="editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="saveIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
       <button class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
     </li>
   </ul>

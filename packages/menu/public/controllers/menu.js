@@ -73,8 +73,6 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
           for(var j = 0; j < $scope.installedDrinks.length; j++){
               var installedDrink = installedDrinks[j];
               var installedOzRemaining = installedDrink.oz * (100 - installedDrink.emptiness);
-              console.log(installedDrink);
-              console.log(installedOzRemaining);
               if(recipeDrink.name == installedDrink.name && installedOzRemaining < recipeDrink.oz){
                 $scope.lowIngredients.push(installedDrink.name);
               }

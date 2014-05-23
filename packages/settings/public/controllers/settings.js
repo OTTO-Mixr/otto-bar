@@ -61,7 +61,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
           //density:,
           //refrigerated:(parentIndex==0?false:true),
           //size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit),
-          emptiness: 100 - $scope.installedDrinks[parentIndex][solenoidIndex].emptiness
+          emptiness: $scope.installedDrinks[parentIndex][solenoidIndex].emptiness
         })
         .success(function(data) {
           angular.copy($scope.installedDrinks[parentIndex][solenoidIndex],$scope.backupDrinks[parentIndex][solenoidIndex]);

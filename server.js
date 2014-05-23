@@ -29,7 +29,7 @@ var Drink = mongoose.model('Drink', {
     carbonated : Boolean,
     refrigerated : Boolean,
     density : Number,
-    fullness: Number
+    emptiness: Number
 });
 
 var Recipe = mongoose.model('Recipe', {
@@ -81,7 +81,8 @@ app.post('/api/installedDrinks', function(req, res) {
 	    carbonated : req.body.carbonated,
 	    refrigerated : req.body.refrigerated,
 	    density : req.body.density,
-	    fullness: req.body.fullness
+            emptiness: req.body.emptiness
+	    //fullness: req.body.fullness
 	}, function(err, drink) {
 		if (err)
 			res.send(err);
@@ -142,7 +143,8 @@ app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 			abv : req.body.abv,
 			carbonated : req.body.carbonated,
 			density : req.body.density,
-			fullness: req.body.fullness
+                        emptiness: req.body.emptiness
+			//fullness: req.body.fullness
 		}, function(err, drink) {
 		if (err)
 			res.send(err);

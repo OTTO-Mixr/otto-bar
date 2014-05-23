@@ -102,7 +102,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
               carbonated: $scope.installedDrinks[parentIndex][solenoidIndex].carbonated,
               density:$scope.drinkMap[$scope.installedDrinks[parentIndex][solenoidIndex].name].density,
               refrigerated:(parentIndex==0?false:true),
-              fullness: 100 - $scope.installedDrinks[parentIndex][solenoidIndex].fullness,
+              emptiness: $scope.installedDrinks[parentIndex][solenoidIndex].emptiness,
               size: $scope.convertToOz($scope.installedDrinks[parentIndex][solenoidIndex].size,$scope.installedDrinks[parentIndex][solenoidIndex].unit)
             })
             .success(function(data) {
@@ -122,7 +122,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     };
 
     $scope.removeDrink = function(parentIndex,index) {
-      $scope.installedDrinks[parentIndex][index].fullness = 100;
+      $scope.installedDrinks[parentIndex][index].emptiness = 100;
       $scope.installedDrinks[parentIndex][index].name = 'empty';
       $scope.installedDrinks[parentIndex][index].carbonated = false;
       $scope.updateDrink(parentIndex,index);

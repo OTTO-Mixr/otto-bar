@@ -7,13 +7,13 @@
         <strong>#{{$index + 1}}</strong><br />
         <input type="text" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
       <div id="bottleContainer" >
-        <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.fullness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
+        <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.emptiness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
         </rzslider>
         <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated;changed = true">
           <div id="full">
           <img src="/settings/assets/img/bottlefull.png" draggable="false"/>
           </div>
-          <div id="empty" style="height: {{liquor.fullness*sliderMultiplier}}px;">
+          <div id="empty" style="height: {{liquor.emptiness*sliderMultiplier}}px;">
           <img src="/settings/assets/img/bottleempty.png" draggable="false"/>
           </div>
           <div id="bubbles" ng-show="liquor.carbonated">

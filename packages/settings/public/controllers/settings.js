@@ -6,6 +6,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.titles = ["Warm","Cold"];
     $scope.units = ["ml","oz","L","gal"];
     $scope.unit= $scope.units[0];
+    $scope.suggestions = [];
 
     // when landing on the page, get all drinks and show them
     $scope.installedDrinks = [];
@@ -34,6 +35,14 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
               $scope.backupCold.push(JSON.parse(JSON.stringify(data[i])));
           }
         }
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+      });
+
+    $http.get('/api/suggestions')
+      .success(function(data) {
+        $scope.suggestions = data;
       })
       .error(function(data) {
         console.log('Error: ' + data);
@@ -85,9 +94,6 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
       $scope.updateDrink(parentIndex,index);
     };
 
-    $scope.suggestions = [];
-    //Add suggestions here
-    //Take from menu recipe ingredients!!!
 
     $scope.sliderMultiplier = 1.78; //TODO change hardcode later
   }

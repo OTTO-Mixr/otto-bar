@@ -69,6 +69,27 @@ app.get('/api/recipes', function(req, res) {
 	});
 });
 
+app.get('/api/suggestions', function(req, res) {
+
+	// use mongoose to get all names in the database
+	Recipe.find({},{'_id':0,'ingredients':1},function(err,recipes) {
+
+		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		if (err)
+			res.send(err);
+
+                var suggestions = [];
+
+                for (var i = 0; i < recipes.length; i++) {
+                  var ingredients = recipes[i].ingredients;
+                  for (var j = 0; j < ingredients.length; j++)
+                    if (suggestions.indexOf(ingredients[j].name) === -1)
+                      suggestions.push(ingredients[j].name);
+                }
+
+		res.json(suggestions); // return all suggestions as array
+	      });
+});
 //WE BASICALLY ONLY NEED GET AND UPDATE
 
 // create drink and send back all drinks after creation

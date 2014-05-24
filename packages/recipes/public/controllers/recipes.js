@@ -21,6 +21,13 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
 
 
     $scope.suggestions = [];
+    $http.get('/api/suggestions')
+      .success(function(data) {
+        $scope.suggestions = data;
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+      });
 
     $scope.recipes = [];
     $http.get('/api/recipes')

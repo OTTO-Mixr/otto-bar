@@ -1,0 +1,12 @@
+<div class="" data-ng-controller="QueueController">
+  <table>
+    <tr>
+      <th>Name</th><th>Cell</th><th>Drink</th>
+    </tr>
+    <tr ng-repeat="order in orders">
+      <td>{{order.order.human.name}}</td>
+      <td>{{order.order.human.cell}}</td>
+      <td>{{order.order.cocktail.name}}</td>
+    </tr>
+  </table>
+</div>

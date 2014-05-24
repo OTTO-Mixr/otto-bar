@@ -10,7 +10,6 @@
           {{ingredient.amount}} {{ingredient.units}} {{ingredient.name}}
         </li>
       </ul>
-      <p>in it.</p>
       <p ng-show="lowIngredients.length > 0">
         Hey buddy are you sure you want to make that? It looks like you're low on:
       </p>
@@ -19,6 +18,10 @@
           {{ingredient}}
         </li>
       </ul>
+      <label>Name:</label>
+      <input type="text" ng-model="input.name" class="form-control" />
+      <label>Cell:</label>
+      <input type="text" ng-model="input.cell" class="form-control" />
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" ng-click="ok()">Yeah</button>

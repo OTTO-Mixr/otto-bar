@@ -20,7 +20,7 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         }
       });
 
-      modalInstance.result.then(function (selectedDrink) {
+      modalInstance.result.then(function (input) {
         $scope.drinkIngredients = [];
 
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
@@ -30,43 +30,56 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
                 }
             }
         }
+
+        var routes = []
         //TODO: Solenoid might be incorrect
         angular.forEach($scope.drinkIngredients, function(ingredient,key) {
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
-          console.log(urlBase + ingredient.drink.solenoid + '/' + ingredient.oz);
-          $http({method: 'UNLOCK', url: urlBase +
-            ingredient.drink.solenoid + '/' + ingredient.oz});
+          routes.push(urlBase + ingredient.drink.solenoid + '/' + ingredient.oz);
         });
-        // queue post goes here
-        // on success:
-        angular.forEach($scope.drinkIngredients, function(ingredient,key) {
-          var pctEmpty = 100 * ingredient.oz/ingredient.drink.oz;
-          var newEmpty = pctEmpty + ingredient.drink.emptiness;
-          if (newEmpty > 100)
-            newEmpty = 100;
-          for (var i = 0; i < $scope.installedDrinks.length; i++) {
-            if ($scope.installedDrinks[i].solenoid == ingredient.drink.solenoid) {
-              $scope.installedDrinks[i].emptiness = newEmpty;
-              break;
-            }
+        $http.post('/queue/',{
+          "human": {
+            "name": input.name,
+            "cell": input.cell
+          },
+          "cocktail": {
+            "name": selectedDrink.name,
+            "routes": routes
           }
-          $http.put('/api/installedDrinks/' + ingredient.drink.solenoid, {
-            emptiness: newEmpty
-          })
-          .success(function(data) {
-            //console.log(data);
-          })
-          .error(function(data) {
-            console.log(data); 
+        })
+        .success(function(data) {
+          angular.forEach($scope.drinkIngredients,function(ingredient,key) {
+            var pctEmpty = 100 * ingredient.oz/ingredient.drink.oz;
+            var newEmpty = pctEmpty + ingredient.drink.emptiness;
+            if (newEmpty > 100)
+              newEmpty = 100;
+            for (var i = 0; i < $scope.installedDrinks.length; i++) {
+              if ($scope.installedDrinks[i].solenoid == ingredient.drink.solenoid) {
+                $scope.installedDrinks[i].emptiness = newEmpty;
+                break;
+              }
+            }
+            $http.put('/api/installedDrinks/' + ingredient.drink.solenoid, {
+              emptiness: newEmpty
+            })
+            .success(function(data) {
+              //console.log(data);
+            })
+            .error(function(data) {
+              console.log(data); 
+            });
           });
-        });
-      });
-    };
+        })
+        .error(function(data) {
 
+        });
+    });
+  };
     var confirmControl = function($scope, $modalInstance,selectedDrink,installedDrinks) {
       $scope.selectedDrink = selectedDrink;
       $scope.installedDrinks = installedDrinks;
       $scope.lowIngredients = [];
+      $scope.input = {};
 
       for(var i = 0; i < selectedDrink.ingredients.length; i++){
           var recipeDrink = selectedDrink.ingredients[i];
@@ -81,13 +94,13 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
 
       //The user wants to make drink.
       $scope.ok = function() {
-          $modalInstance.close($scope.selectedDrink);
+          $modalInstance.close($scope.input);
       };
   
       $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
       };
-    }
+    };
 
     //Menu Filter
     $scope.recipes = [];

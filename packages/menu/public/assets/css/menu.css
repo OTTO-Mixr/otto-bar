@@ -38,14 +38,14 @@
   text-indent: 40px;
 }
 
-#search ul {
+/*#search ul*/ .search-ul{
   list-style: none;
   width: 428px;
   margin: 0 auto;
   text-align: left;
 }
 
-#search ul li {
+/*#search ul li*/.search-li {
   border-bottom: 1px solid #ddd;
   padding: 10px;
   overflow: hidden;

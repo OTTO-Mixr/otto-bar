@@ -7,13 +7,13 @@
         <strong>#{{$index + 1}}</strong><br />
         <input type="text" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
       <div id="bottleContainer" >
-        <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.fullness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
+        <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.emptiness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
         </rzslider>
         <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated;changed = true">
           <div id="full">
           <img src="/settings/assets/img/bottlefull.png" draggable="false"/>
           </div>
-          <div id="empty" style="height: {{liquor.fullness*sliderMultiplier}}px;">
+          <div id="empty" style="height: {{liquor.emptiness*sliderMultiplier}}px;">
           <img src="/settings/assets/img/bottleempty.png" draggable="false"/>
           </div>
           <div id="bubbles" ng-show="liquor.carbonated">
@@ -23,13 +23,15 @@
         </div> <!--bottleContainer-->
     <strong>Size</strong><br/>
     <div id="sizeContainer">
-      <div class="col-md-6 nopadding"><input ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
-      <div class="col-md-6 nopadding"><select ng-model="unit" ng-options="unit for unit in units" class="form-control"></select></div>
+      <div class="col-md-6 nopadding"><input ng-change="changed=true" ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
+      <div class="col-md-6 nopadding"><select ng-change="changed=true" ng-model="liquor.unit" ng-options="unit for unit in units" class="form-control"></select></div>
     </div>
-        <div id="buttonRow" ng-show="changed">
-          <button type="submit" class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;">Save</button>
-          <button class="btn btn-warning col-md-5 col-md-offset-2">Cancel</button>
-          <button class="btn btn-danger col-md-12">Remove</button>
+        <div id="buttonRow">
+          <button class="btn btn-success col-md-5" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
+          <button class="btn btn-warning col-md-5 col-md-offset-2" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
+          Cancel</button>
+        </div>
+          <button class="btn btn-danger col-md-12" ng-click="removeDrink($parent.$index,$index)" ng-show="!changed">Remove</button>
         </div>
       </div> <!--drinkBox-->
       </div> <!--row-->

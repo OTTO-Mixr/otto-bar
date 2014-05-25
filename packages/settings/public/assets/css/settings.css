@@ -46,7 +46,8 @@
 }
 
 /* Override so that hidden stuff still takes up space */
+/* Not needed anymore, maybe useful later
 .ng-hide {
   visibility: hidden;
   display: block !important;
-}
+}*/

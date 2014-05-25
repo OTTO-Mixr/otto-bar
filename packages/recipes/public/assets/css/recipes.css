@@ -1,0 +1,12 @@
+.recipes_example h1:{background-color:purple}
+
+.border-fix {
+  overflow: visible !important;
+  display: inline-block;
+  width: inherit;
+}
+
+.ingredient {
+  display: inline-block;
+  margin-bottom: 5px;
+}

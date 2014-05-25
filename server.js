@@ -25,11 +25,13 @@ var Drink = mongoose.model('Drink', {
 	name : String,
 	abv : Number,
 	size : Number,
+        unit: String,
+        oz: Number,
 	solenoid : Number,
     carbonated : Boolean,
     refrigerated : Boolean,
     density : Number,
-    fullness: Number
+    emptiness: Number
 });
 
 var Recipe = mongoose.model('Recipe', {
@@ -67,21 +69,44 @@ app.get('/api/recipes', function(req, res) {
 	});
 });
 
+app.get('/api/suggestions', function(req, res) {
+
+	// use mongoose to get all names in the database
+	Recipe.find({},{'_id':0,'ingredients':1},function(err,recipes) {
+
+		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		if (err)
+			res.send(err);
+
+                var suggestions = [];
+
+                for (var i = 0; i < recipes.length; i++) {
+                  var ingredients = recipes[i].ingredients;
+                  for (var j = 0; j < ingredients.length; j++)
+                    if (suggestions.indexOf(ingredients[j].name) === -1)
+                      suggestions.push(ingredients[j].name);
+                }
+
+		res.json(suggestions); // return all suggestions as array
+	      });
+});
 //WE BASICALLY ONLY NEED GET AND UPDATE
 
 // create drink and send back all drinks after creation
 app.post('/api/installedDrinks', function(req, res) {
 	// create a drink, information comes from AJAX request from Angular
 	Drink.create({
-		type : req.body.type,
+		//type : req.body.type,
 		name : req.body.name,
-		abv : req.body.abv,
+		//abv : req.body.abv,
 		size : req.body.size,
+                unit: req.body.unit,
+                oz: req.body.oz,
 		solenoid : req.body.solenoid,
 	    carbonated : req.body.carbonated,
 	    refrigerated : req.body.refrigerated,
-	    density : req.body.density,
-	    fullness: req.body.fullness
+	    //density : req.body.density,
+        emptiness: req.body.emptiness
 	}, function(err, drink) {
 		if (err)
 			res.send(err);
@@ -115,16 +140,40 @@ app.post('/api/recipes', function(req, res) {
 	});
 });
 
+// update recipe
+app.put('/api/recipes/:recipe_id', function (req, res){
+	Recipe.findOneAndUpdate({_id:req.params.recipe_id},
+		{
+		  name : req.body.name,
+		  description : req.body.description,
+		  ingredients : req.body.ingredients
+		}, function(err, drink) {
+		if (err)
+			res.send(err);
+
+		// get and return all the drinks after you update one
+		Recipe.find(function(err, recipes) {
+			if (err)
+				res.send(err);
+			res.json(recipes);
+		});
+	});
+});
+//update drink
 app.put('/api/installedDrinks/:solenoidIndex', function (req, res){
 	Drink.findOneAndUpdate({solenoid:req.params.solenoidIndex},
-		{
-			type : req.body.type,
+                req.body
+		/*{
+			//type : req.body.type,
 			name : req.body.name,
-			abv : req.body.abv,
+			//abv : req.body.abv,
 			carbonated : req.body.carbonated,
-			density : req.body.density,
-			fullness: req.body.fullness
-		}, function(err, drink) {
+                        size : req.body.size,
+                        unit: req.body.unit,
+                        oz: req.body.oz,
+			//density : req.body.density,
+                        emptiness: req.body.emptiness
+		}*/, function(err, drink) {
 		if (err)
 			res.send(err);
 

@@ -5,9 +5,10 @@
 var Module    = require("meanio").Module;
 var Bar       = new Module("Bar");
 
-var black   = require('ioboard-beaglebone-black');
+//var black   = require('ioboard-beaglebone-black');
 var five    = require("johnny-five");
-var bone    = new black();
+//var bone    = new black();
+var bone = five.Board();
 
 var voicejs = require('voice.js');
 var queue   = require('bull');
@@ -251,11 +252,11 @@ Bar.register(function(app, auth, database) {
       });
 
     });
-
+/*
 process.on('exit', function() {
     bone.reset();
 });
-
+*/
     /*
     //Uncomment to use. Requires meanio@0.3.7 or above
     // Save settings with callback

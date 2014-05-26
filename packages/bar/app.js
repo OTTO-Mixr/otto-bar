@@ -2,6 +2,13 @@
 /*
  * Defining the Package
  */
+/*
+The following is necessary because bluebird (used in bull) throws
+an uncaught exception that propagates upwards and causes an issue with
+johnny-fives REPL
+*/
+process.on('uncaughtException',function(error){});
+
 var Module    = require("meanio").Module;
 var Bar       = new Module("Bar");
 

@@ -3265,9 +3265,9 @@ fieldset[disabled] .twitter-typeahead .tt-hint {
   border: none;
   display: block;
   margin-top: 8px;
-  opacity: 0;
+  /*opacity: 0;*/
   padding: 0;
-  visibility: hidden;
+  /*visibility: hidden;*/
   -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-transition: 0.25s;

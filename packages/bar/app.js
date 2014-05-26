@@ -8,7 +8,7 @@ var Bar       = new Module("Bar");
 //var black   = require('ioboard-beaglebone-black');
 var five    = require("johnny-five");
 //var bone    = new black();
-var bone = five.Board();
+var board = five.Board();
 
 var voicejs = require('voice.js');
 var queue   = require('bull');
@@ -89,23 +89,29 @@ Bar.register(function(app, auth, database) {
     //});
 
 
-    bone.on("ready", function() {
+    board.on("ready", function() {
 
-      var board = five.Board({io: bone});
+      //var board = five.Board({io: bone});
 
       var solenoid = new Array();
       var sol_ison = new Array();
 
       var i = 0;
 
-      var pump_index = 69;
-      var pump       = new five.Led(pump_index);
+//      var pump_index = 69;
 
+      for (i = 0; i < 6; i++) {
+        solenoid[i] = new five.Led(i+8);
+        sol_ison[i] = false;
+      }
+
+      //var pump       = new five.Led(pump_index);
+/*
       for (i = 0; i < 4; i++) {
         solenoid[i] = new five.Led(i+66);
         sol_ison[i] = false;
       }
-
+*/
 //  #### HELPER_FUNCTIONS ####
 
       function solenoid_lock(sol_num) {
@@ -184,6 +190,10 @@ Bar.register(function(app, auth, database) {
       app.post('/resume', function(req,res){
         cocktailQ.resume();
         res.send(true);
+      });
+
+      app.get('/queue', function(req,res){
+        
       });
 
       app.post('/queue', function(req,res){

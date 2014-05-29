@@ -19,13 +19,20 @@ module.exports = function(grunt) {
                 }
             },
             html: {
-                files: ['public/**/views/**', 'server/views/**'],
+              files: [
+                'public/**/views/**',
+                'server/views/**',
+                'packages/**/public/views/**'
+              ],
                 options: {
                     livereload: true
                 }
             },
             css: {
-                files: ['public/**/css/**'],
+              files: [
+                'public/**/css/**', 
+                'packages/**/public/assets/css/**'
+              ],
                 tasks: ['csslint'],
                 options: {
                     livereload: true

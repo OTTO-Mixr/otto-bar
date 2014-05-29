@@ -29,18 +29,22 @@
     </div>
   </script>
   <h1>Welcome to OTTOs Menu</h1>
-  <div class="bar">
-    <input type="text" ng-model="searchString" placeholder="Enter a drink" />
+  <div class="drink-search">
+    <input class="form-control input-hg rounded" type="text" ng-model="searchString" placeholder="Enter a drink" />
   </div>
   <div id="search">
-  <ul class="search-ul">
-    <li class="search-li" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
-      <div id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
-      <h3>{{recipe.name}}</h3>
-      <p>{{recipe.description}}</p>
-      </div>
-      <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="confirm(recipe)">Make it</button>
-    </li>
-  </ul>
+    <ul class="search-ul">
+      <li class="search-li" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
+        <div id="recipeContainer">
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <h3>{{recipe.name}}</h3>
+            <p>{{recipe.description}}</p>
+          </div>
+          <div class="col-md-4 col-sm-4 col-xs-12">
+            <button class="btn btn-info btn-hg" ng-click="confirm(recipe)">Make it</button>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>

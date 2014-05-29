@@ -12,11 +12,6 @@ process.on('uncaughtException',function(error){});
 var Module    = require("meanio").Module;
 var Bar       = new Module("Bar");
 
-//var black   = require('ioboard-beaglebone-black');
-var five    = require("johnny-five");
-//var bone    = new black();
-var board = five.Board();
-
 var voicejs = require('voice.js');
 var queue   = require('bull');
 
@@ -24,13 +19,16 @@ var util    = require('util');
 var http    = require('http')
 var fs      = require('fs');
 
+var redis = require('redis'),
+    redis_client = redis.createClient();
+
 var client = new voicejs.Client({
   email:'otto.mixr@gmail.com',
   password:'PishPosh',
   tokens: require('./tokens.json')
 });
 
-var cocktailQ = queue('cocktail pouring', 6379, 'localhost');
+var cocktailQ = queue('cocktails', 6379, 'localhost');
 
 cocktailQ
   .on('completed', function(job){
@@ -87,17 +85,6 @@ Bar.register(function(app, auth, database) {
     //We enable routing. By default the Package Object is passed to the routes
     Bar.routes(app, auth, database);
 
-    //We are adding a link to the main menu for all authenticated users
-    //Bar.menus.add({
-      //title: 'Activate Solenoid',
-      //link: 'bar open solenoid',
-      //roles: ['authenticated'],
-      //menu: 'main'
-    //});
-
-
-    board.on("ready", function() {
-
       //var board = five.Board({io: bone});
 
       var solenoid = new Array();
@@ -105,32 +92,22 @@ Bar.register(function(app, auth, database) {
 
       var i = 0;
 
-//      var pump_index = 69;
-
       for (i = 0; i < 6; i++) {
-        solenoid[i] = new five.Led(i+8);
         sol_ison[i] = false;
       }
 
-      //var pump       = new five.Led(pump_index);
-/*
-      for (i = 0; i < 4; i++) {
-        solenoid[i] = new five.Led(i+66);
-        sol_ison[i] = false;
-      }
-*/
 //  #### HELPER_FUNCTIONS ####
 
       function solenoid_lock(sol_num) {
         sol_ison[sol_num] = false;
-        solenoid[sol_num].off();
+//        solenoid[sol_num].off();
 
         util.log('Solenoid '+sol_num+': Closed\t- '+Date.now());
       }
 
       function solenoid_unlock(sol_num) {
         sol_ison[sol_num] = true;
-        solenoid[sol_num].on();
+//        solenoid[sol_num].on();
 
         util.log('Solenoid '+sol_num+': Open\t- '+Date.now());
       }
@@ -145,13 +122,13 @@ Bar.register(function(app, auth, database) {
       }
 
       function pump_unlock() {
-        pump.on();
+//        pump.on();
 
         util.log('Pump '+pump_index+': Open\t- '+Date.now());
       }
 
       function pump_lock() {
-        pump.off();
+//        pump.off();
 
         util.log('Pump '+pump_index+': Closed\t- '+Date.now());
       }
@@ -183,7 +160,6 @@ Bar.register(function(app, auth, database) {
             } else {
               util.log('Solenoid '+req.params.sol_num+': ERR\t- Already Open');
               res.send('false');
-            //res.end();
             }
         } else {
             util.log('Nope');
@@ -192,16 +168,59 @@ Bar.register(function(app, auth, database) {
       
       });
 
-// crypto.randomBytes(20).toString('hex');
-
       app.post('/resume', function(req,res){
         cocktailQ.resume();
         res.send(true);
       });
 
       app.get('/queue', function(req,res){
-        
+        get_waiting_cocktail_ids(function(err,result){
+          if (err) {
+            console.log("You done goofed son.");
+            res.send(500, { error: 
+              "You're not getting your data because Chris sucks at async tasks"}
+            );
+          } else {
+            res.send(result);
+          }
+        });
       });
+
+/*
+ * Callbacks needed because async tasks hurt my puny human brain.
+ */
+      var get_waiting_cocktail_ids = function(callback){
+        var json_orders = new Array();
+
+        redis_client.lrange('bull:cocktails:wait',0,-1, function (err, list) {
+          if (err) {
+            console.log(err);
+            callback(err);
+          }
+
+          get_waiting_cocktail_data(list,callback);
+        });
+
+      };
+
+      var get_waiting_cocktail_data = function(list,callback){
+        var json_orders = new Array();
+
+        list.forEach(function(hash) {
+          redis_client.hget('bull:cocktails:'+hash, 'data', function (err, json) {
+            if (err) return console.log(err);
+              
+            json_orders.push(json);
+          });
+        });
+
+        send_waiting_cocktails(json_orders,callback);
+      };
+
+      var send_waiting_cocktails = function(orders,callback){
+          console.log(JSON.stringify(json_orders));
+          callback(null,JSON.stringify(orders));
+      }
 
       app.post('/queue', function(req,res){
         cocktailQ.add(req.body);
@@ -260,37 +279,12 @@ Bar.register(function(app, auth, database) {
             } else {
               util.log('Solenoid '+req.params.sol_num+': ERR\t- Already Open');
               res.send('false');
-            //res.end();
             }
         } else {
             util.log('Nope');
             res.send('false');
         }
       });
-
-    });
-/*
-process.on('exit', function() {
-    bone.reset();
-});
-*/
-    /*
-    //Uncomment to use. Requires meanio@0.3.7 or above
-    // Save settings with callback
-      // Use this for saving data from administration pages
-    Bar.settings({'someSetting':'some value'},function (err, settings) {
-      //you now have the settings object
-    });
-
-    // Another save settings example this time with no callback
-    // This writes over the last settings.
-    Bar.settings({'anotherSettings':'some value'});
-
-    // Get settings. Retrieves latest saved settigns
-    Bar.settings(function (err, settings) {
-      //you now have the settings object
-    });
-    */
 
     return Bar;
 });

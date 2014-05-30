@@ -30,7 +30,7 @@
       </div>
       </form>
     </div>
-    <button class="btn btn-default topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
+    <button class="btn btn-success topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
     </li>
     <li class="search-li border-fix" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6" >
       <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
@@ -61,9 +61,9 @@
       </div>
       </form>
       </div>
-      <button ng-show="!editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = true">Edit it</button>
-      <button ng-show="editing" class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="saveIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
-      <button class="btn btn-default col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
+      <button ng-show="!editing" class="btn btn-warning col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = true">Edit it</button>
+      <button ng-show="editing" class="btn btn-success col-xs-4 col-sm-3 col-md-4" ng-click="saveIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
+      <button class="btn btn-danger col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
     </li>
   </ul>
   </div>

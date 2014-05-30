@@ -4,13 +4,24 @@
   text-align: center;
 }
 
-.bar{
-  background-color:#5c9bb7;
-  background-image:-webkit-linear-gradient(top, #5c9bb7, #5392ad);
-  background-image:-moz-linear-gradient(top, #5c9bb7, #5392ad);
-  background-image:linear-gradient(top, #5c9bb7, #5392ad);
+.rounded{
+  border-top-left-radius: 27px;
+  border-top-right-radius: 27px;
+  border-bottom-left-radius: 27px;
+  border-bottom-right-radius: 27px;
+}
 
-  box-shadow: 0 1px 1px #ccc;
+.drink-search{
+  width:500px;
+  margin: 0 auto;
+}
+
+.drink-search input{
+  text-align: left;
+  text-indent: 50px;
+}
+
+.bar{
   border-radius: 2px;
   width: 400px;
   padding: 14px;
@@ -36,7 +47,10 @@
   font-weight: bold;
   outline: none;
   text-indent: 40px;
+  border-bottom-right-radius: 27px;
+  border-top-right-radius: 27px;
 }
+
 
 /*#search ul*/ .search-ul{
   list-style: none;

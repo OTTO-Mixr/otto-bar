@@ -27,8 +27,8 @@
       <div class="col-md-6 nopadding"><select ng-change="changed=true" ng-model="liquor.unit" ng-options="unit for unit in units" class="form-control"></select></div>
     </div>
         <div id="buttonRow">
-          <button class="btn btn-success col-md-6 col-xs-12" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
-          <button class="btn btn-warning col-md-6 col-xs-12" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
+          <button class="btn btn-success col-md-6 col-sm-6 col-xs-6" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
+          <button class="btn btn-warning col-md-6 col-sm-6 col-xs-6" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
           Cancel</button>
         </div>
           <button class="btn btn-danger col-sm-12 col-md-12 col-xs-12" ng-click="removeDrink($parent.$index,$index)" ng-show="!changed">Remove</button>

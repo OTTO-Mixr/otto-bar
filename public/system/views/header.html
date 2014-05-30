@@ -1,11 +1,11 @@
 <div data-ng-controller="HeaderController">
   <div class="navbar-header" >
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+    <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed" data-toggle="collapse" data-target="#navbar-collapse" >
       <span class="sr-only">Toggle navigation</span>
     </button>
     <a class="navbar-brand" href="#">OTTO!</a>
   </div>
-  <div class="collapse navbar-collapse" id="navbar-collapse-01">
+  <div class="collapse navbar-collapse" id="navbar-collapse" collapse="isCollapsed">
     <ul class="nav navbar-nav">    
       <li data-ng-repeat="item in menus.main" ui-route="/{{item.link}}" ng-class="{active: $uiRoute}"><a mean-token="item.link" ui-sref='{{item.link}}'>{{item.title}}</a>
       </li>

@@ -37,14 +37,16 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
           var urlBase = ingredient.drink.refrigerated ? '/cold/' : '/warm/';
           routes.push(urlBase + ingredient.drink.solenoid + '/' + ingredient.oz);
         });
-        $http.post('/queue/',{
-          "human": {
-            "name": input.name,
-            "cell": input.cell
-          },
-          "cocktail": {
-            "name": selectedDrink.name,
-            "routes": routes
+        $http.post('/queue/',
+          {"order": {
+              "human": {
+                "name": input.name,
+                "cell": input.cell
+              },
+              "cocktail": {
+                "name": selectedDrink.name,
+                "routes": routes
+              }
           }
         })
         .success(function(data) {

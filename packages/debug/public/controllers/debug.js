@@ -5,26 +5,26 @@ angular.module('mean').controller('DebugController', ['$scope','$http','Global',
     $scope.global = Global;
     $scope.debug = {name:'debug'};
   
-    $scope.titles = ["Warm","Cold"];
+    $scope.solenoids = [];
+    $scope.pump = false;
 
-    $scope.warmOpen = [];
-    $scope.coldOpen = [];
-    $scope.drinks = [];
-
-    $scope.drinks.push($scope.warmOpen);
-    $scope.drinks.push($scope.coldOpen);
-
-    for (var i = 0; i < 6; i++) {
-      $scope.warmOpen.push(false);
-      $scope.coldOpen.push(false);
+    for (var i = 0; i < 12; i++) {
+      $scope.solenoids.push(false);
     }
 
-    $scope.toggle = function(parentIndex,solenoidIndex) {
-      var method = $scope.drinks[parentIndex][solenoidIndex] ? 'LOCK' : 'UNLOCK';
-      $scope.drinks[parentIndex][solenoidIndex] = !$scope.drinks[parentIndex][solenoidIndex];
-      var URL = ((parentIndex == 0) ? 'warm' : 'cold') + '/'+solenoidIndex;
+    $scope.toggleSolenoid = function(index) {
+      var method = $scope.solenoids[index] ? 'LOCK' : 'UNLOCK';
+      $scope.solenoids[index] = !$scope.solenoids[index];
+      var URL = '/solenoid/' + index;
       $http({method:method,url:URL});
     };
+
+    $scope.togglePump = function() {
+      var method = $scope.pump ? 'LOCK' : 'UNLOCK';
+      $scope.pump = !$scope.pump;
+      var URL = '/pump';
+      $http({method:method,url:URL});
+    }
 
   }
 ]);

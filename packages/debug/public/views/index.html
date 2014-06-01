@@ -1,0 +1,21 @@
+<div class="" data-ng-controller="DebugController">
+<h1>Debug</h1>
+  <div ng-repeat="drink in drinks">
+    <h2>{{titles[$index]}}</h2>
+    <div class="row">
+      <div class="col-md-2 col-sm-4 col-xs-6" ng-repeat="solenoid in drink track by $index">
+        <button ng-click="toggle($parent.$index,$index)" class="btn"
+          ng-class="{'btn-primary':!solenoid,'btn-danger':solenoid}">
+          {{solenoid?'Close':'Open'}} Solenoid {{$index}}</button>
+      </div>
+    </div>
+  </div>
+  <!-- 12 buttons 
+  6 on top = top drinks
+  6 on bottom = bottom drinks
+  click to open, click to close
+  visual representation (button-primary = closed become button-warning = open)
+  /warm/(0-5) UNLOCK/LOCK
+  /cold/(0-5) UNLOCK/LOCK
+  -->
+</div>

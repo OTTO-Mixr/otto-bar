@@ -7,7 +7,7 @@ The following is necessary because bluebird (used in bull) throws
 an uncaught exception that propagates upwards and causes an issue with
 johnny-fives REPL
 */
-process.on('uncaughtException',function(error){});
+//process.on('uncaughtException',function(error){});
 
 var Module    = require("meanio").Module;
 var Bar       = new Module("Bar");
@@ -15,6 +15,7 @@ var Bar       = new Module("Bar");
 var voicejs = require('voice.js');
 var queue   = require('bull');
 
+var async   = require("async");
 var util    = require('util');
 var http    = require('http')
 var fs      = require('fs');
@@ -173,56 +174,41 @@ Bar.register(function(app, auth, database) {
         res.send(true);
       });
 
+
       app.get('/queue', function(req,res){
-        get_waiting_cocktail_ids(function(err,result){
-          if (err) {
-            console.log("You done goofed son.");
-            res.send(500, { error: 
-              "You're not getting your data because Chris sucks at async tasks"}
-            );
-          } else {
-            res.send(result);
+        var context     = {};
+        context.json_orders = [];
+        
+        async.series([
+          function(callback) {
+            redis_client.lrange('bull:cocktails:wait',0,-1, function (err, list) {
+              if (err) return callback(err);
+              context.list = list;
+              callback();
+            });
+          },
+          function(callback) {
+            context.callback=callback;
+
+            async.eachSeries(context.list, function (hash, callback){
+              redis_client.hget('bull:cocktails:'+hash, 'data', function (err, json) {
+                if (err) return callback(err);
+                context.json_orders.push(JSON.parse(json));
+                callback();
+              });
+            }, function(err) {
+                context.callback();
+            });
           }
+        ], 
+        function(err) {
+          if (err) console.log("ERROR");
+          res.send(context.json_orders);
         });
       });
 
-/*
- * Callbacks needed because async tasks hurt my puny human brain.
- */
-      var get_waiting_cocktail_ids = function(callback){
-        var json_orders = new Array();
-
-        redis_client.lrange('bull:cocktails:wait',0,-1, function (err, list) {
-          if (err) {
-            console.log(err);
-            callback(err);
-          }
-
-          get_waiting_cocktail_data(list,callback);
-        });
-
-      };
-
-      var get_waiting_cocktail_data = function(list,callback){
-        var json_orders = new Array();
-
-        list.forEach(function(hash) {
-          redis_client.hget('bull:cocktails:'+hash, 'data', function (err, json) {
-            if (err) return console.log(err);
-              
-            json_orders.push(json);
-          });
-        });
-
-        send_waiting_cocktails(json_orders,callback);
-      };
-
-      var send_waiting_cocktails = function(orders,callback){
-          console.log(JSON.stringify(json_orders));
-          callback(null,JSON.stringify(orders));
-      }
-
       app.post('/queue', function(req,res){
+        console.log(req.body);
         cocktailQ.add(req.body);
         res.send(true);
         console.log("Added "+req.body.order.cocktail.name+

@@ -4,23 +4,23 @@
       <h3>Are you sure about that?</h3>
     </div>
     <div class="modal-body">
-      <p>You want a {{selectedDrink.name}} which has</p>
+      <p>you want a {{selecteddrink.name}} which has</p>
       <ul>
-        <li ng-repeat="ingredient in selectedDrink.ingredients">
+        <li ng-repeat="ingredient in selecteddrink.ingredients">
           {{ingredient.amount}} {{ingredient.units}} {{ingredient.name}}
         </li>
       </ul>
-      <p ng-show="lowIngredients.length > 0">
-        Hey buddy are you sure you want to make that? It looks like you're low on:
+      <p ng-show="lowingredients.length > 0">
+        hey buddy are you sure you want to make that? it looks like you're low on:
       </p>
       <ul>
-        <li ng-repeat="ingredient in lowIngredients">
+        <li ng-repeat="ingredient in lowingredients">
           {{ingredient}}
         </li>
       </ul>
-      <label>Name:</label>
+      <label>name:</label>
       <input type="text" ng-model="input.name" class="form-control" />
-      <label>Cell:</label>
+      <label>cell:</label>
       <input type="text" ng-model="input.cell" class="form-control" />
     </div>
     <div class="modal-footer">
@@ -31,8 +31,17 @@
   <h1>Welcome to OTTOs Menu</h1>
   <div class="drink-search">
     <input class="form-control input-hg rounded" type="text" ng-model="searchString" placeholder="Enter a drink" />
+ </div>
+
+  <div ng-init="myExp='menu'">
+      <button ng-click="myExp='info'">One</button>
+
+    <div class="my-slide-container">
+      <div ng-include="myExp" class="my-slide-animation"></div>
+    </div>
   </div>
-  <div id="search">
+
+  <script type="text/ng-template" id="menu">  
     <ul class="search-ul">
       <li class="search-li" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6">
         <div id="recipeContainer">
@@ -41,10 +50,20 @@
             <p>{{recipe.description}}</p>
           </div>
           <div class="col-md-4 col-sm-4 col-xs-12">
-            <button class="btn btn-info btn-hg" ng-click="confirm(recipe)">Make it</button>
+          <!--  <button class="btn btn-info btn-hg" ng-click="confirm(recipe)">Make it</button> -->
+            <button class="btn btn-info btn-hg" ng-click="info()">Make it</button>
+            <button ng-click="myExp='info'">One</button>
+
           </div>
         </div>
       </li>
     </ul>
-  </div>
+  </script>
+
+  <script type="text/ng-template" id="info">
+    <p>test</p>
+  </script>
+
 </div>
+
+

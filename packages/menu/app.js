@@ -25,6 +25,7 @@ Menu.register(function(app, auth, database) {
       menu: 'main'
     })
 
+    Menu.angularDependencies(['ngAnimate']);
     Menu.aggregateAsset('css','menu.css');
     /*
     //Uncomment to use. Requires meanio@0.3.7 or above

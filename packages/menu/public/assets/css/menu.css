@@ -1,5 +1,71 @@
 .menu_example h1:{background-color:purple}
 
+/*
+.my-switch-container {
+  position:relative;
+}
+
+.my-switch-animation.ng-enter,
+.my-switch-animation.ng-leave {
+  -webkit-transition:0.5s linear all;
+  transition:0.5s linear all;
+
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+}
+
+.my-switch-animation.ng-enter {
+  left:100%;
+}
+
+.my-switch-animation.ng-leave,
+                    .my-switch-animation.ng-enter.ng-enter-active {
+                        left:0;
+                      }
+
+                      .my-switch-animation.ng-leave.ng-leave-active {
+                          left:-100%;
+                        }
+
+*
+*
+*/
+.my-slide-container {
+    position:relative;
+  }
+  .my-slide-animation.ng-enter, .my-slide-animation.ng-leave {
+      -webkit-transition:0.5s linear all;
+        transition:0.5s linear all;
+
+          position:absolute;
+            top:0;
+              left:0;
+                right:0;
+                  height:600px;
+                }
+
+                .my-slide-animation.ng-enter {
+                    z-index:100;
+                      top:600px;
+                        opacity:0;
+                      }
+                      .my-slide-animation.ng-enter.ng-enter-active {
+                          top:0;
+                            opacity:1;
+                          }
+
+                          .my-slide-animation.ng-leave {
+                              z-index:101;
+                                top:0;
+                                  opacity:1;
+                                }
+                                .my-slide-animation.ng-leave.ng-leave-active {
+                                    top:-600px;
+                                      opacity:0;
+                                    }
+
 #search {
   text-align: center;
 }
@@ -70,3 +136,34 @@
     position: absolute;
     top: 33%;
 }
+
+.my-switch-container {
+    position:relative;
+      height:500px;
+    }
+
+    .my-switch-animation.ng-enter,
+    .my-switch-animation.ng-leave {
+        -webkit-transition:0.5s linear all;
+          transition:0.5s linear all;
+            height:500px;
+
+              position:absolute;
+                top:0;
+                  left:0;
+                    right:0;
+                  }
+
+                  .my-switch-animation.ng-enter {
+                      left:100%;
+                    }
+
+                    .my-switch-animation.ng-leave,
+                    .my-switch-animation.ng-enter.ng-enter-active {
+                        left:0;
+                      }
+
+                      .my-switch-animation.ng-leave.ng-leave-active {
+                          left:-100%;
+                        }
+

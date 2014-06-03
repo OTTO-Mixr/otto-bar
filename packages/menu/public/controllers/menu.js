@@ -20,6 +20,11 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
         }
       });
 
+
+      $scope.info = function(){
+        $scope.myExp = $scope.info;
+      }
+
       modalInstance.result.then(function (input) {
         $scope.drinkIngredients = [];
 

@@ -55,13 +55,18 @@ angular.module('mean').controller('RecipesController', ['$scope', '$modal','$htt
     $scope.addIt = function() {
       $scope.add.$setPristine(true);
       $scope.ingredients.splice($scope.ingredients.length-1,1);
+      var totalOZ = 0;
+      var alcoholOZ = 0;
       $scope.ingredients.forEach(function(ingredient) {
         ingredient.oz = $scope.convertToOz(ingredient.amount,ingredient.units);
+        totalOZ += ingredient.oz;
+        alcoholOZ += ingredient.oz * (ingredient.abv/100.0);
       });
       $http.post('/api/recipes',{
         name: $scope.name,
         description: $scope.description,
-        ingredients: $scope.ingredients
+        ingredients: $scope.ingredients,
+        abv: alcoholOZ/totalOZ
       })
       .success(function(data) {
         $scope.recipes = data;

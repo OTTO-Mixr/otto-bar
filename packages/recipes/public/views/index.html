@@ -1,8 +1,17 @@
 <div class="" data-ng-controller="RecipesController">
   <h1>Here's yo recipes dawg</h1>
-  <div class="bar">
-    <input type="text" ng-model="searchString" placeholder="Enter a drink" />
+
+  <div class="drink-search">
+    <div class="form-group search-bar">
+      <div ng-init="isFocused  = false" ng-class="{focus: isFocused}" class="input-group input-group-hg input-group-rounded">
+        <span class="input-group-btn">
+          <button type="submit" class="btn"><span class="fui-search"></span></button>
+        </span>
+        <input ng-focus="isFocused = true" ng-blur="isFocused=false" class="form-control" placeholder="Search" id="search-query-2" type="text">
+      </div>
+    </div>
   </div>
+
   <div id="search">
   <ul class="search-ul">
     <li class="search-li border-fix">

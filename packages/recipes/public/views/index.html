@@ -13,74 +13,74 @@
   </div>
 
   <div id="search">
-  <ul class="search-ul">
-    <li class="search-li border-fix">
-    <div class="row">
-    <div id="addContainer" class="col-xs-12 col-sm-12 col-md-12">
-    <form name="add" novalidate>
-      <div class="form-group" ng-class="{'has-error': add.name.$invalid && add.name.$dirty}">
-        <input type="text" class="form-control" placeholder="Name" ng-model="name" name="name" required unique="recipes"/>
-        <label class="control-label" ng-show="add.name.$error.unique">
-        Recipe name must be unique
-        </label>
-      </div>
-      <div class="form-group" ng-class="{'has-error': add.description.$invalid && add.description.$dirty}">
-        <input type="text" class="form-control" placeholder="Description" ng-model="description" name="description" required/>
-      </div>
-      <div ng-repeat="ingredient in ingredients" class="form-group ingredient">
-        <div class="col-md-3 nopadding">
-        <input type="number" min="0.1" max="{{ingredient.units != 'ml'? 12 : 355}}" class="form-control" placeholder="" ng-model="ingredient.amount" ng-required="$index == 0 || ingredient.name != ''" />
+    <ul class="search-ul">
+      <li class="search-li border-fix">
+        <div class="row">
+          <div id="addContainer" class="col-xs-12 col-sm-12 col-md-12">
+            <form name="add" novalidate>
+              <div class="form-group" ng-class="{'has-error': add.name.$invalid && add.name.$dirty}">
+                <input type="text" class="form-control" placeholder="Name" ng-model="name" name="name" required unique="recipes"/>
+                <label class="control-label" ng-show="add.name.$error.unique">
+                  Recipe name must be unique
+                </label>
+              </div>
+              <div class="form-group" ng-class="{'has-error': add.description.$invalid && add.description.$dirty}">
+                <input type="text" class="form-control" placeholder="Description" ng-model="description" name="description" required/>
+              </div>
+              <div ng-repeat="ingredient in ingredients" class="form-group ingredient">
+                <div class="col-md-3 col-sm-6 col-xs-12 nopadding">
+                  <input type="number" min="0.1" max="{{ingredient.units != 'ml'? 12 : 355}}" class="form-control" placeholder="#" ng-model="ingredient.amount" ng-required="$index == 0 || ingredient.name != ''" />
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 nopadding">
+                  <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 nopadding">
+                  <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required="$index == 0 || ingredient.amount != undefined"/>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 nopadding">
+                  <input type="number" min="0" max="100" placeholder="% ABV" ng-model="ingredient.abv" class="form-control"/>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="col-md-2 nopadding">
-        <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
+        <div class="addIt row">
+          <button class="btn btn-success col-xs-12 col-sm-12 col-md-12" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
         </div>
-        <div class="col-md-4 nopadding">
-        <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required="$index == 0 || ingredient.amount != undefined"/>
+      </li>
+      <li class="search-li border-fix" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6" >
+        <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
+          <h3>{{recipe.name}}</h3>
+          <p>{{recipe.description}}</p>
         </div>
-        <div class="col-md-3 nopadding">
-          <input type="number" min="0" max="100" placeholder="% ABV" ng-model="ingredient.abv" class="form-control"/>
+        <div id="editContainer" ng-show="editing" class="col-xs-6 col-sm-7 col-md-8">
+          <form name="edit" novalidate>
+            <div class="form-group" ng-class="{'has-error': edit.name.$invalid && edit.name.$dirty}">
+              <input type="text" class="form-control" placeholder="Name" ng-model="recipe.name" name="name" required unique="recipes"/>
+              <label class="control-label" ng-show="edit.name.$error.unique">
+                Recipe name must be unique
+              </label>
+            </div>
+            <div class="form-group" ng-class="{'has-error': edit.description.$invalid && edit.description.$dirty}">
+              <input type="text" class="form-control" placeholder="Description" ng-model="recipe.description" name="description" required/>
+            </div>
+            <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
+              <div class="col-md-3 nopadding">
+                <input type="number" min="0.1" max="{{ingredient.units != 'ml'? 12 : 355}}" class="form-control" placeholder="" ng-model="ingredient.amount" ng-required="$index == 0 || ingredient.name != ''" />
+              </div>
+              <div class="col-md-3 nopadding">
+                <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
+              </div>
+              <div class="col-md-6 nopadding">
+              <input focus-index="focusIndex" focus-index-change="recipe.ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,recipe.ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required="$index == 0 || ingredient.amount != undefined"/>
+              </div>
+            </div>
+          </form>
         </div>
-      </div>
-      </form>
-    </div>
-    </div>
-    <div class="row">
-    <button class="btn btn-success col-xs-12 col-sm-12 col-md-12" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
-    </div>
-    </li>
-    <li class="search-li border-fix" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6" >
-      <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">
-      <h3>{{recipe.name}}</h3>
-      <p>{{recipe.description}}</p>
-      </div>
-      <div id="editContainer" ng-show="editing" class="col-xs-6 col-sm-7 col-md-8">
-    <form name="edit" novalidate>
-      <div class="form-group" ng-class="{'has-error': edit.name.$invalid && edit.name.$dirty}">
-        <input type="text" class="form-control" placeholder="Name" ng-model="recipe.name" name="name" required unique="recipes"/>
-        <label class="control-label" ng-show="edit.name.$error.unique">
-        Recipe name must be unique
-        </label>
-      </div>
-      <div class="form-group" ng-class="{'has-error': edit.description.$invalid && edit.description.$dirty}">
-        <input type="text" class="form-control" placeholder="Description" ng-model="recipe.description" name="description" required/>
-      </div>
-      <div ng-repeat="ingredient in recipe.ingredients" class="form-group">
-        <div class="col-md-3 nopadding">
-        <input type="number" min="0.1" max="{{ingredient.units != 'ml'? 12 : 355}}" class="form-control" placeholder="" ng-model="ingredient.amount" ng-required="$index == 0 || ingredient.name != ''" />
-        </div>
-        <div class="col-md-3 nopadding">
-        <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
-        </div>
-        <div class="col-md-6 nopadding">
-        <input focus-index="focusIndex" focus-index-change="recipe.ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,recipe.ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required="$index == 0 || ingredient.amount != undefined"/>
-        </div>
-      </div>
-      </form>
-      </div>
-      <button ng-show="!editing" class="btn btn-warning col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = true">Edit it</button>
-      <button ng-show="editing" class="btn btn-success col-xs-4 col-sm-3 col-md-4" ng-click="saveIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
-      <button class="btn btn-danger col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
-    </li>
-  </ul>
+        <button ng-show="!editing" class="btn btn-warning col-xs-4 col-sm-3 col-md-4" ng-click="editIt(recipe);editing = true">Edit it</button>
+        <button ng-show="editing" class="btn btn-success col-xs-4 col-sm-3 col-md-4" ng-click="saveIt(recipe);editing = false;" ng-disabled="edit.$invalid">Save it</button>
+        <button class="btn btn-danger col-xs-4 col-sm-3 col-md-4" ng-click="deleteIt(recipe)">Delete it</button>
+      </li>
+    </ul>
   </div>
 </div>

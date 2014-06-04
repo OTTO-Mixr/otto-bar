@@ -27,7 +27,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         data.sort(function(a,b) {return (a.solenoid > b.solenoid) ? 1 : ((b.solenoid > a.solenoid) ? -1 : 0);} );
         for(var i = 0; i < data.length; i++){
           console.log('Drink ' + i + ': ' + data[i]);
-          if(i < 6){
+          if(i >= 6){
               $scope.warmDrinks.push(data[i]);
               $scope.backupWarm.push(angular.copy(data[i]));
           } else {

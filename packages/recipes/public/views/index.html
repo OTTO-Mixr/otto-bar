@@ -6,7 +6,8 @@
   <div id="search">
   <ul class="search-ul">
     <li class="search-li border-fix">
-    <div id="addContainer" class="col-xs-6 col-sm-7 col-md-8">
+    <div class="row">
+    <div id="addContainer" class="col-xs-12 col-sm-12 col-md-12">
     <form name="add" novalidate>
       <div class="form-group" ng-class="{'has-error': add.name.$invalid && add.name.$dirty}">
         <input type="text" class="form-control" placeholder="Name" ng-model="name" name="name" required unique="recipes"/>
@@ -21,16 +22,22 @@
         <div class="col-md-3 nopadding">
         <input type="number" min="0.1" max="{{ingredient.units != 'ml'? 12 : 355}}" class="form-control" placeholder="" ng-model="ingredient.amount" ng-required="$index == 0 || ingredient.name != ''" />
         </div>
-        <div class="col-md-3 nopadding">
+        <div class="col-md-2 nopadding">
         <select ng-model="ingredient.units" ng-options="unit for unit in units" class="form-control"></select>
         </div>
-        <div class="col-md-6 nopadding">
+        <div class="col-md-4 nopadding">
         <input focus-index="focusIndex" focus-index-change="ingredients.length" type="text" class="form-control" placeholder="Add a drink" ng-change="addIngredient($index,ingredients)" ng-model="ingredient.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" ng-required="$index == 0 || ingredient.amount != undefined"/>
+        </div>
+        <div class="col-md-3 nopadding">
+          <input type="number" min="0" max="100" placeholder="% ABV" ng-model="ingredient.abv" class="form-control"/>
         </div>
       </div>
       </form>
     </div>
-    <button class="btn btn-success topOffset33 col-xs-4 col-sm-3 col-md-4" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
+    </div>
+    <div class="row">
+    <button class="btn btn-success col-xs-12 col-sm-12 col-md-12" ng-click="addIt()" ng-disabled="add.$invalid">Add it</button>
+    </div>
     </li>
     <li class="search-li border-fix" ng-repeat="recipe in recipes | searchFor:searchString | limitTo: 6" >
       <div ng-show="!editing" id="recipeContainer" class="col-xs-6 col-sm-7 col-md-8">

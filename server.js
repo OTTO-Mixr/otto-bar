@@ -37,7 +37,8 @@ var Drink = mongoose.model('Drink', {
 var Recipe = mongoose.model('Recipe', {
 	name : String,
 	description : String,
-	ingredients : []
+	ingredients : [],
+        abv: Number
 });
 
 // api ---------------------------------------------------------------------
@@ -126,7 +127,8 @@ app.post('/api/recipes', function(req, res) {
 	Recipe.create({
 		name : req.body.name,
 		description : req.body.description,
-		ingredients : req.body.ingredients
+		ingredients : req.body.ingredients,
+                abv: req.body.abv
 	}, function(err, recipe) {
 		if (err)
 			res.send(err);

@@ -30,7 +30,14 @@
   </script>
   <h1>Welcome to OTTOs Menu</h1>
   <div class="drink-search">
-    <input class="form-control input-hg rounded" type="text" ng-model="searchString" placeholder="Enter a drink" />
+    <div class="form-group search-bar">
+      <div ng-init="isFocused  = false" ng-class="{focus: isFocused}" class="input-group input-group-hg input-group-rounded">
+        <span class="input-group-btn">
+          <button type="submit" class="btn"><span class="fui-search"></span></button>
+        </span>
+        <input ng-focus="isFocused = true" ng-blur="isFocused=false" class="form-control" placeholder="Search" id="search-query-2" type="text">
+      </div>
+    </div>
   </div>
   <div id="search">
     <ul class="search-ul">

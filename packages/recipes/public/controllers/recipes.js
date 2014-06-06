@@ -118,18 +118,23 @@ angular.module('mean').directive('unique',function() {
   return {
     require: 'ngModel',
     scope: {
-      elementArr: "=unique"
+      elementArr: "=unique",
+      uniqueOffset: "=?",
+      uniqueExclude: "=?"
     },
     link: function(scope,elem,attrs,ctrl) {
+      var offset = angular.isDefined(scope.uniqueOffset) ? scope.uniqueOffset : 0;
+      var exclude = angular.isDefined(scope.uniqueExclude) ? scope.uniqueExclude : [];
       elem.on('blur', function(evt) {
         scope.$apply(function() {
           var valid = true;
           for (var i = 0; i < scope.elementArr.length; i++) {
             //make sure that they're not at the same index
             //otherwise name will never be valid when editing
-            if (scope.$parent.$index == i)
+            if (scope.$parent.$index + offset == i)
               continue;
-            if (scope.elementArr[i].name.toLowerCase() == elem.val().toLowerCase()) {
+            if (scope.elementArr[i].name.toLowerCase() == elem.val().toLowerCase() && 
+            exclude.indexOf(elem.val().toLowerCase()) === -1) {
               valid = false;
               break;
             }

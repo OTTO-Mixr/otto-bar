@@ -5,35 +5,41 @@
       <div class="row">
         <div class="drinkBox col-md-2 col-sm-4 col-xs-6" ng-repeat="liquor in drink">
           <strong>#{{$index + 1}}</strong><br />
-          <input type="text" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control"/><br />
-            <div id="bottleContainer" >
-              <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.emptiness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
-              </rzslider>
-              <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated;changed = true">
-                <div id="full">
-                  <img src="/settings/assets/img/bottlefull.png" draggable="false"/>
-                </div>
-                <div id="empty" style="height: {{liquor.emptiness*sliderMultiplier}}px;">
-                  <img src="/settings/assets/img/bottleempty.png" draggable="false"/>
-                </div>
-                <div id="bubbles" ng-show="liquor.carbonated">
-                  <img src="/settings/assets/img/bubbles.png" draggable="false"/>
-                </div>
-              </div> <!--bottle-->
-            </div> <!--bottleContainer-->
-            <strong>Size</strong><br/>
-            <div id="sizeContainer">
-      <div class="col-md-6 nopadding"><input ng-change="changed=true" ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
-      <div class="col-md-6 nopadding"><select ng-change="changed=true" ng-model="liquor.unit" ng-options="unit for unit in units" class="form-control"></select></div>
-    </div>
-        <div id="buttonRow">
-          <button class="btn btn-success col-md-6 col-sm-6 col-xs-6" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed">Save</button>
-          <button class="btn btn-warning col-md-6 col-sm-6 col-xs-6" ng-click="cancelDrink($parent.$index,$index);changed = false;" ng-show="changed">
-          Cancel</button>
-        </div>
-          <button class="btn btn-danger col-sm-12 col-md-12 col-xs-12" ng-click="removeDrink($parent.$index,$index)" ng-show="!changed">Remove</button>
-        </div>
-      </div> <!--drinkBox-->
+          <form name="drinkForm">
+            <input type="text" name="name" placeholder="Enter a drink" ng-change="changed = true" ng-model="liquor.name" typeahead="suggestion for suggestion in suggestions | filter:$viewValue" class="form-control" unique="allDrinks" unique-offset="$parent.$index * drink.length" unique-exclude="['empty']"/><br />
+            <!--TODO CHANGE THIS ERROR MESSAGE LATER-->
+            <label style="position:absolute;z-index:400;background-color:purple;color:white" class="control-label" ng-show="drinkForm.name.$error.unique">
+            You can only have one of each drink otherwise shit will blow up :(
+            </label>
+              <div id="bottleContainer" >
+                <rzslider change="changed = true" rz-slider-floor="0" rz-slider-ceil="100" rz-slider-model="liquor.emptiness"  rz-slider-horizontal="false" rz-slider-pointer-only="true" rz-slider-height="178">
+                </rzslider>
+                <div id="bottle" ng-click="liquor.carbonated = !liquor.carbonated;changed = true">
+                  <div id="full">
+                    <img src="/settings/assets/img/bottlefull.png" draggable="false"/>
+                  </div>
+                  <div id="empty" style="height: {{liquor.emptiness*sliderMultiplier}}px;">
+                    <img src="/settings/assets/img/bottleempty.png" draggable="false"/>
+                  </div>
+                  <div id="bubbles" ng-show="liquor.carbonated">
+                    <img src="/settings/assets/img/bubbles.png" draggable="false"/>
+                  </div>
+                </div> <!--bottle-->
+              </div> <!--bottleContainer-->
+              <strong>Size</strong><br/>
+              <div id="sizeContainer">
+        <div class="col-md-6 nopadding"><input ng-change="changed=true" ng-model="liquor.size" min="0" max="9999" type="number" class="form-control"/></div>
+        <div class="col-md-6 nopadding"><select ng-change="changed=true" ng-model="liquor.unit" ng-options="unit for unit in units" class="form-control"></select></div>
+      </div>
+          <div id="buttonRow">
+            <button class="btn btn-success col-md-6 col-sm-6 col-xs-6" ng-click="updateDrink($parent.$index,$index);changed = false;" ng-show="changed" ng-disabled="drinkForm.$invalid">Save</button>
+            <button class="btn btn-warning col-md-6 col-sm-6 col-xs-6" ng-click="cancelDrink($parent.$index,$index,drinkForm);changed = false;" ng-show="changed">
+            Cancel</button>
+          </div>
+            <button class="btn btn-danger col-sm-12 col-md-12 col-xs-12" ng-click="removeDrink($parent.$index,$index)" ng-show="!changed">Remove</button>
+            </div>
+          </form>
+        </div> <!--drinkBox-->
       </div> <!--row-->
   </div>
 </div>

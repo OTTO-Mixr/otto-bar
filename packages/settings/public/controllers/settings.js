@@ -10,6 +10,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
 
     // when landing on the page, get all drinks and show them
     $scope.installedDrinks = [];
+    $scope.allDrinks = [];
     $scope.warmDrinks = [];
     $scope.coldDrinks = [];
     $scope.backupDrinks = [];
@@ -19,6 +20,14 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     $scope.installedDrinks.push($scope.coldDrinks);
     $scope.backupDrinks.push($scope.backupWarm);
     $scope.backupDrinks.push($scope.backupCold);
+
+    $scope.updateAllDrinks = function(newDrinks,oldDrinks) {
+      $scope.allDrinks = [].concat.apply([],$scope.installedDrinks);
+      console.log($scope.allDrinks);
+    }
+    // Update flattened version of installed drinks
+    $scope.$watchCollection("warmDrinks",$scope.updateAllDrinks);
+    $scope.$watchCollection("coldDrinks",$scope.updateAllDrinks);
 
     //Get all the currently installed drinks from db
     console.log('Getting installedDrinks from db..');
@@ -62,7 +71,7 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
     }
 
     $scope.updateDrink = function(parentIndex, solenoidIndex) {
-        $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex:solenoidIndex+6), {
+        $http.put('/api/installedDrinks/' + (parentIndex==0?solenoidIndex+6:solenoidIndex), {
           //type:,
           name:$scope.installedDrinks[parentIndex][solenoidIndex].name,
           //abv:,
@@ -83,8 +92,13 @@ angular.module('mean').controller('SettingsController', ['$scope', '$http', 'Glo
         });
     };
 
-    $scope.cancelDrink = function(parentIndex,index) {
+    $scope.cancelDrink = function(parentIndex,index,drinkForm) {
       angular.copy($scope.backupDrinks[parentIndex][index],$scope.installedDrinks[parentIndex][index]);
+      //Reset form
+      drinkForm.$setPristine(true);
+      drinkForm.$error = {};
+      // For some reason we must explicitly reset this error
+      drinkForm.name.$error.unique = false;
     };
 
     $scope.removeDrink = function(parentIndex,index) {

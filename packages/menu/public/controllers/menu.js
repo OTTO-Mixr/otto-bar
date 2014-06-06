@@ -22,7 +22,6 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
 
       modalInstance.result.then(function (input) {
         $scope.drinkIngredients = [];
-
         for(var i = 0; i < selectedDrink.ingredients.length; i++){
             for(var j = 0; j < $scope.installedDrinks.length; j++){
                 if(selectedDrink.ingredients[i].name == $scope.installedDrinks[j].name){
@@ -70,6 +69,11 @@ angular.module('mean').controller('MenuController', ['$scope', '$modal','$http',
             .error(function(data) {
               console.log(data); 
             });
+            $http.post('/api/order',{
+              recipe: selectedDrink._id
+            })
+            .success(function(data){})
+            .error(function(data){});
           });
         })
         .error(function(data) {

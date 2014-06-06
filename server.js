@@ -4,6 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId,
+    async = require("async"),
     passport = require('passport'),
     logger = require('mean-logger');
 
@@ -38,10 +41,30 @@ var Recipe = mongoose.model('Recipe', {
 	name : String,
 	description : String,
 	ingredients : [],
-        abv: Number
+        abv: Number,
+        created: Date
 });
 
+var Order = mongoose.model('Order', new Schema ({
+  recipe: ObjectId,
+  user: ObjectId,
+  date: Date,
+}));
+
 // api ---------------------------------------------------------------------
+
+// Order API
+app.post('/api/order', function(req,res) {
+  req.body['date'] = new Date();
+  req.body['user'] = req.user._id;
+  Order.create(req.body,function(err,orders) {
+    if (err)
+      res.send(err);
+    else
+      res.send(orders);
+  });
+});
+
 // get all drinks
 app.get('/api/installedDrinks', function(req, res) {
 
@@ -59,15 +82,44 @@ app.get('/api/installedDrinks', function(req, res) {
 // get all recipes
 app.get('/api/recipes', function(req, res) {
 
-	// use mongoose to get all drinks in the database
-	Recipe.find(function(err, recipes) {
+  Recipe.find(function(err, r) {
 
-		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
-		if (err)
-			res.send(err);
-
-		res.json(recipes); // return all drinks in JSON format
-	});
+    if (err)
+      res.send(err);
+    async.map(r,
+      function(recipe,callback) {
+        var add_popularity = function(err,count) {
+          if (err) {
+            console.log(err);
+          } else {
+            var newRecipe = {
+              name: recipe.name,
+              description: recipe.description,
+              ingredients: recipe.ingredients,
+              _id: recipe._id,
+              // 86400000 = 1 day in ms
+              // this is used to make the denominator more sane
+              popularity: count/((new Date() - recipe.created)/86400000)
+            };
+          }
+          return callback(null,newRecipe);
+        };
+        if (req.isAuthenticated())
+          Order.count({recipe:recipe._id,user:req.user._id},add_popularity);
+        else
+          Order.count({recipe:recipe._id},add_popularity);
+      }, function(err,recipes) {
+        if (err) {
+          res.send(err);
+        } else {
+          recipes.sort(function(a,b) {
+            return b.popularity - a.popularity;
+          });
+          res.json(recipes);
+        }
+      }
+    );
+  });
 });
 
 app.get('/api/suggestions', function(req, res) {
@@ -128,7 +180,8 @@ app.post('/api/recipes', function(req, res) {
 		name : req.body.name,
 		description : req.body.description,
 		ingredients : req.body.ingredients,
-                abv: req.body.abv
+                abv: req.body.abv,
+                created: new Date()
 	}, function(err, recipe) {
 		if (err)
 			res.send(err);
